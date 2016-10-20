@@ -1,4 +1,13 @@
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
 .map {
 	height: 300px;
 	width: 300px;
+}
+
+.nav {
+	display: flex;
+	flex-direction: column;
 }
