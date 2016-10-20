@@ -21475,8 +21475,8 @@
 			_this.state = {
 				markers: [{
 					position: {
-						lat: 37.7749,
-						lng: 122.4194
+						lat: 37.77493,
+						lng: -122.419416
 					},
 					key: 'San Francisco',
 					defaultAnimation: 2
@@ -21571,7 +21571,7 @@
 					googleMapElement: _react2.default.createElement(
 						_reactGoogleMaps.GoogleMap,
 						{
-							defaultZoom: 3,
+							defaultZoom: 12,
 							defaultCenter: { lat: this.props.lat,
 								lng: this.props.lon
 							}

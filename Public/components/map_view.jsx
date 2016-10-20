@@ -27,7 +27,7 @@ export default class Map extends Component {
 				  }
 				  googleMapElement={
 				    <GoogleMap
-				      defaultZoom={3}
+				      defaultZoom={12}
 				      defaultCenter={
 					           	{lat: this.props.lat,
 					           	 lng: this.props.lon

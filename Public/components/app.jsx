@@ -9,8 +9,8 @@ export default class App extends Component {
 		this.state = {
 		markers: [{
 			position: {
-				lat: 37.7749,
-				lng: 122.4194
+				lat: 37.77493,
+				lng: -122.419416
 			},
 			key: 'San Francisco',
 			defaultAnimation: 2
