@@ -30,6 +30,7 @@
     "morgan": "^1.7.0",
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
+    "react-geosuggest": "^2.0.0",
     "react-google-maps": "^4.11.0",
     "react-icons": "^2.2.1",
     "react-tap-event-plugin": "^1.0.0",
