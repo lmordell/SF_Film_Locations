@@ -68877,10 +68877,10 @@
 
 	    var _this = _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).call(this, props));
 
-	    _this.state = { open: false, search: '' };
+	    _this.state = { open: false };
 
 	    _this.handleOpenSideBar = _this.handleOpenSideBar.bind(_this);
-	    _this.handleSearch = _this.handleSearch.bind(_this);
+	    _this.handleSubmit = _this.handleSubmit.bind(_this);
 	    return _this;
 	  }
 
@@ -68899,7 +68899,7 @@
 	        autoCompleteRestrictions = new google.maps.LatLngBounds(southWestBounds, northEastBounds);
 	        var options = { bounds: autoCompleteRestrictions };
 	        autocomplete = new google.maps.places.Autocomplete(input, options);
-	      }, 200);
+	      }, 300);
 	    }
 	  }, {
 	    key: 'handleOpenSideBar',
@@ -68907,15 +68907,18 @@
 	      this.setState({ open: !this.state.open });
 	    }
 	  }, {
-	    key: 'handleSearch',
-	    value: function handleSearch(e) {
-	      this.setState({ search: e.target.value });
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      e.preventDefault();
+	      var value = document.getElementById('searchTextField').value;
+	      console.log('value of input', value);
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
 	      var forceNavDown = { 'top': '64px' };
 
+	      console.log(this.state);
 	      return _react2.default.createElement(
 	        'div',
 	        { className: 'nav' },
@@ -68926,12 +68929,15 @@
 	          _react2.default.createElement(
 	            _materialUi.MenuItem,
 	            null,
-	            _react2.default.createElement(_materialUi.TextField, {
-	              id: 'searchTextField',
-	              placeholder: '',
-	              floatingLabelText: 'Look for Film Locations',
-	              fullWidth: true,
-	              onChange: this.handleSearch })
+	            _react2.default.createElement(
+	              'form',
+	              { onSubmit: this.handleSubmit },
+	              _react2.default.createElement(_materialUi.TextField, {
+	                id: 'searchTextField',
+	                placeholder: '',
+	                floatingLabelText: 'Look for Film Locations',
+	                fullWidth: true })
+	            )
 	          )
 	        )
 	      );

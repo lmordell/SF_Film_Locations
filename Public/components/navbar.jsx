@@ -6,10 +6,10 @@ export default class NavBar extends Component {
   constructor (props) {
     super(props)
 
-    this.state = { open: false, search: '' }
+    this.state = { open: false }
 
     this.handleOpenSideBar = this.handleOpenSideBar.bind(this)
-    this.handleSearch = this.handleSearch.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   componentDidMount () {
@@ -25,31 +25,35 @@ export default class NavBar extends Component {
       autoCompleteRestrictions = new google.maps.LatLngBounds(southWestBounds, northEastBounds)
       let options = { bounds: autoCompleteRestrictions }
       autocomplete = new google.maps.places.Autocomplete(input, options)
-    }, 200)
+    }, 300)
   }
 
   handleOpenSideBar () {
     this.setState({ open: !this.state.open })
   }
 
-  handleSearch (e) {
-    this.setState({ search: e.target.value })
+  handleSubmit (e) {
+    e.preventDefault()
+    let value = document.getElementById('searchTextField').value
+    console.log('value of input', value)
   }
 
   render () {
     const forceNavDown = { 'top': '64px' }
 
+    console.log(this.state)
     return (
       <div className='nav'>
         <AppBar onLeftIconButtonTouchTap={this.handleOpenSideBar} title='SF Film Locations' iconClassNameRight='muidocs-icon-navigation-expand-more' />
         <Drawer containerStyle={forceNavDown} width={272} open={this.state.open}>
           <MenuItem>
-          <TextField
-            id='searchTextField'
-            placeholder=''
-            floatingLabelText='Look for Film Locations'
-            fullWidth={true}
-            onChange={this.handleSearch} />
+          <form onSubmit={this.handleSubmit}>
+            <TextField
+              id='searchTextField'
+              placeholder=''
+              floatingLabelText='Look for Film Locations'
+              fullWidth={true} />
+          </form>
           </MenuItem>
         </Drawer>
       </div>
