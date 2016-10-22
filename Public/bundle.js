@@ -65120,7 +65120,7 @@
 	    _this.state = {
 	      defaultPosition: {
 	        lat: 37.77493,
-	        lon: -122.419416
+	        lng: -122.419416
 	      }
 	    };
 	    _this.renderMarkers = _this.renderMarkers.bind(_this);
@@ -65145,7 +65145,7 @@
 	    value: function render() {
 	      var _state$defaultPositio = this.state.defaultPosition;
 	      var lat = _state$defaultPositio.lat;
-	      var lon = _state$defaultPositio.lon;
+	      var lng = _state$defaultPositio.lng;
 
 	      return _react2.default.createElement(_ScriptjsLoader2.default, {
 	        hostname: "maps.googleapis.com",
@@ -65159,7 +65159,7 @@
 	        containerElement: _react2.default.createElement('div', { className: 'map' }),
 	        googleMapElement: _react2.default.createElement(
 	          _reactGoogleMaps.GoogleMap,
-	          { defaultZoom: 13, defaultCenter: { lat: lat, lng: lon } },
+	          { defaultZoom: 13, defaultCenter: { lat: lat, lng: lng } },
 	          this.renderMarkers()
 	        ) });
 	    }
@@ -72911,7 +72911,7 @@
 	        southWestBounds = new google.maps.LatLng(37.689178, -122.501335);
 	        northEastBounds = new google.maps.LatLng(37.833844, -122.414818);
 	        sfCityBounds = new google.maps.LatLngBounds(southWestBounds, northEastBounds);
-	        var options = { bounds: sfCityBounds, types: ['geocode'] };
+	        var options = { bounds: sfCityBounds };
 	        autocomplete = new google.maps.places.Autocomplete(input, options);
 	      }, 300);
 	    }
@@ -72925,8 +72925,11 @@
 	    value: function handleSubmit(e) {
 	      e.preventDefault();
 	      var result = autocomplete.getPlace();
+	      console.log('result ', result);
+	      var lat = result.geometry.location.lat();
+	      var lng = result.geometry.location.lng();
+	      console.log('lat & lng', [lat, lng]);
 	      var formattedResult = (0, _format_address2.default)(result.address_components);
-	      console.log('formattedResult ', formattedResult);
 	      _axios2.default.get('/api/maps/data', {
 	        params: {
 	          locations: formattedResult
@@ -72996,6 +72999,8 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
+	var _List = __webpack_require__(534);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = function (props) {
@@ -73004,47 +73009,47 @@
 			'div',
 			null,
 			_react2.default.createElement(
-				'ul',
+				_List.List,
 				null,
 				_react2.default.createElement(
-					'li',
-					null,
+					_List.ListItem,
+					{ disabled: true },
 					'Title: ',
 					props.title
 				),
 				_react2.default.createElement(
-					'li',
-					null,
+					_List.ListItem,
+					{ disabled: true },
 					'Released in: ',
 					props.release_year
 				),
 				_react2.default.createElement(
-					'li',
-					null,
+					_List.ListItem,
+					{ disabled: true },
 					'Filming Location: ',
 					props.location
 				),
 				_react2.default.createElement(
-					'li',
-					null,
+					_List.ListItem,
+					{ disabled: true },
 					'Starring: ',
 					props.actors
 				),
 				_react2.default.createElement(
-					'li',
-					null,
+					_List.ListItem,
+					{ disabled: true },
 					'Directed by: ',
 					props.director
 				),
 				_react2.default.createElement(
-					'li',
-					null,
+					_List.ListItem,
+					{ disabled: true },
 					'Written by: ',
 					props.writer
 				),
 				_react2.default.createElement(
-					'li',
-					null,
+					_List.ListItem,
+					{ disabled: true },
 					'Produced by: ',
 					props.production_company
 				)

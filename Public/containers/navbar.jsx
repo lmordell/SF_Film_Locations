@@ -33,7 +33,7 @@ class NavBar extends Component {
       southWestBounds = new google.maps.LatLng(37.689178, -122.501335)
       northEastBounds = new google.maps.LatLng(37.833844, -122.414818)
       sfCityBounds = new google.maps.LatLngBounds(southWestBounds, northEastBounds)
-      let options = { bounds: sfCityBounds, types: ['geocode'] }
+      let options = { bounds: sfCityBounds }
       autocomplete = new google.maps.places.Autocomplete(input, options)
     }, 300)
   }
@@ -45,8 +45,11 @@ class NavBar extends Component {
   handleSubmit (e) {
     e.preventDefault()
     let result = autocomplete.getPlace()
+    console.log('result ', result)
+    let lat = result.geometry.location.lat()
+    let lng = result.geometry.location.lng()
+    console.log('lat & lng', [lat, lng])
     let formattedResult = formatAddress(result.address_components)
-    console.log('formattedResult ', formattedResult)
     axios.get('/api/maps/data', {
       params: {
         locations: formattedResult

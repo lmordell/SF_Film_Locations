@@ -16,7 +16,7 @@ class Map extends Component {
     this.state = {
       defaultPosition: {
         lat: 37.77493,
-        lon: -122.419416
+        lng: -122.419416
       }
     }
     this.renderMarkers = this.renderMarkers.bind(this)
@@ -30,7 +30,7 @@ class Map extends Component {
   }
 
   render () {
-    const { lat, lon } = this.state.defaultPosition
+    const { lat, lng } = this.state.defaultPosition
     return (
 
       <ScriptjsLoader
@@ -41,7 +41,7 @@ class Map extends Component {
                           <FaSpinner />
                         </div>}
         containerElement={<div className='map' />}
-        googleMapElement={<GoogleMap defaultZoom={13} defaultCenter={{lat: lat, lng: lon }}>
+        googleMapElement={<GoogleMap defaultZoom={13} defaultCenter={{lat: lat, lng: lng }}>
                             {this.renderMarkers()}
                           </GoogleMap>} />
     )
