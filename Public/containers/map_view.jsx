@@ -31,7 +31,6 @@ class Map extends Component {
 
   render () {
     const { lat, lon } = this.state.defaultPosition
-    console.log('props in map', this.props)
     return (
 
       <ScriptjsLoader
@@ -50,7 +49,7 @@ class Map extends Component {
 }
 
 function mapStateToProps ({movies}) {
-  return { movies}
+  return { movies }
 }
 
 export default connect(mapStateToProps, {updateActiveMovie})(Map)

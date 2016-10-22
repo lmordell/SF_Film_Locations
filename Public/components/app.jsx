@@ -9,7 +9,7 @@ import { getDefaultMovies } from '../actions/actions_movies'
 
 injectTapEventPlugin()
 
-import NavBar from './navbar'
+import NavBar from '../containers/navbar'
 import Map from '../containers/map_view'
 
 class App extends Component {

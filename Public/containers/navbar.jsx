@@ -1,15 +1,19 @@
 import React, { Component } from 'react'
-import Geosuggest from 'react-geosuggest'
+import { connect } from 'react-redux'
 import { AppBar, Drawer, MenuItem, TextField } from 'material-ui/'
 import axios from 'axios'
+
+//components
+import Movie from '../components/movie_detail'
 
 // utils
 import formatAddress from '../utils/format_address'
 
+
 // Set google autocomplete to component level scope to access throughout component
 let autocomplete
 
-export default class NavBar extends Component {
+class NavBar extends Component {
   constructor (props) {
     super(props)
 
@@ -52,6 +56,7 @@ export default class NavBar extends Component {
   }
 
   render () {
+    console.log(this.props.movies.activeMovie)
     // Pushes the material ui siderbar to just below the navbar
     const forceNavDown = { 'top': '64px' }
     return (
@@ -67,8 +72,17 @@ export default class NavBar extends Component {
               fullWidth={true} />
           </form>
           </MenuItem>
+          <MenuItem>
+            <Movie {...this.props.movies.activeMovie} />
+          </MenuItem>
         </Drawer>
       </div>
     )
   }
 }
+
+function mapStateToProps ({movies}) {
+  return { movies }
+}
+
+export default connect(mapStateToProps)(NavBar)
