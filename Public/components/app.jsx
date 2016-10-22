@@ -27,8 +27,7 @@ class App extends Component {
   componentWillMount () {
     const { getDefaultMovies } = this.props
     // before component mounts, get all movies from 2015
-    // then, send the array of results back to another route
-    // to get the lat / long of each films location
+    // in next promise call get the lat / long of each films location
     // add the lat / long prop to each film
     // set the state of defaultResults to data of film + lat long
     // pass state to map
@@ -39,6 +38,9 @@ class App extends Component {
     // data is displayed
     // on the side bar
     getDefaultMovies()
+      .then((movies) => {
+        console.log('movies', movies)
+      })
   }
 
   render () {
@@ -51,5 +53,9 @@ class App extends Component {
     )
   }
 }
+
+// function mapStateToProps ({movies}) {
+//   return { movies}
+// }
 
 export default connect(null, {getDefaultMovies})(App)
