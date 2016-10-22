@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import { AppBar, Drawer, MenuItem } from 'material-ui/'
+import { connect } from 'react-redux'
+import axios from 'axios'
+
+// Dispatches
+import { getDefaultMovies } from '../actions/actions_movies'
+
 injectTapEventPlugin()
 
 import NavBar from './navbar'
 import Map from '../containers/map_view'
 
-export default class App extends Component {
+class App extends Component {
   constructor (props) {
     super(props)
 
@@ -19,6 +25,7 @@ export default class App extends Component {
   }
 
   componentWillMount () {
+    const { getDefaultMovies } = this.props
     // before component mounts, get all movies from 2015
     // then, send the array of results back to another route
     // to get the lat / long of each films location
@@ -31,6 +38,7 @@ export default class App extends Component {
     // On Marker click, 'active movie' gets updated in state, and active movie 
     // data is displayed
     // on the side bar
+    getDefaultMovies()
   }
 
   render () {
@@ -43,3 +51,5 @@ export default class App extends Component {
     )
   }
 }
+
+export default connect(null, {getDefaultMovies})(App)

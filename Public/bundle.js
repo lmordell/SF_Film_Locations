@@ -28833,6 +28833,14 @@
 
 	var _materialUi = __webpack_require__(325);
 
+	var _reactRedux = __webpack_require__(646);
+
+	var _axios = __webpack_require__(553);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	var _actions_movies = __webpack_require__(679);
+
 	var _navbar = __webpack_require__(678);
 
 	var _navbar2 = _interopRequireDefault(_navbar);
@@ -28848,6 +28856,9 @@
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	// Dispatches
+
 
 	(0, _reactTapEventPlugin2.default)();
 
@@ -28871,6 +28882,7 @@
 	  _createClass(App, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
+	      var getDefaultMovies = this.props.getDefaultMovies;
 	      // before component mounts, get all movies from 2015
 	      // then, send the array of results back to another route
 	      // to get the lat / long of each films location
@@ -28883,6 +28895,8 @@
 	      // On Marker click, 'active movie' gets updated in state, and active movie 
 	      // data is displayed
 	      // on the side bar
+
+	      getDefaultMovies();
 	    }
 	  }, {
 	    key: 'render',
@@ -28903,7 +28917,7 @@
 	  return App;
 	}(_react.Component);
 
-	exports.default = App;
+	exports.default = (0, _reactRedux.connect)(null, { getDefaultMovies: _actions_movies.getDefaultMovies })(App);
 
 /***/ },
 /* 319 */
@@ -74218,21 +74232,33 @@
 
 /***/ },
 /* 676 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
 
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 	exports.default = function () {
 	  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : INITIAL_STATE;
 	  var action = arguments[1];
 
-	  switch (action.type) {}
+	  switch (action.type) {
+	    case _actions_movies.GET_DEFAULT_MOVIES:
+	      {
+	        var temp = {};
+	        temp.movieData = action.payload.data;
+	        var newState = _extends({}, state, temp);
+	        return _extends({}, state, temp);
+	      }
+	  }
 	  return state;
 	};
+
+	var _actions_movies = __webpack_require__(679);
 
 	var INITIAL_STATE = { movieData: [], activeMovie: {} };
 
@@ -74282,6 +74308,11 @@
 	  }
 
 	  _createClass(Map, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      console.log('this props', this.props);
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(_ScriptjsLoader2.default, {
@@ -74442,6 +74473,35 @@
 	}(_react.Component);
 
 	exports.default = NavBar;
+
+/***/ },
+/* 679 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.GET_DEFAULT_MOVIES = undefined;
+	exports.getDefaultMovies = getDefaultMovies;
+
+	var _axios = __webpack_require__(553);
+
+	var _axios2 = _interopRequireDefault(_axios);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var GET_DEFAULT_MOVIES = exports.GET_DEFAULT_MOVIES = 'GET_DEFAULT_MOVIES';
+
+	function getDefaultMovies() {
+	  var request = _axios2.default.get('/api/movies/default');
+
+	  return {
+	    type: GET_DEFAULT_MOVIES,
+	    payload: request
+	  };
+	}
 
 /***/ }
 /******/ ]);

@@ -1,9 +1,9 @@
 const request = require('request')
 
-const getMapData = (req, res) => {
+const getInitialMovies = (req, res) => {
   const options = { method: 'GET',
     url: 'https://data.sfgov.org/resource/wwmu-gmzc.json',
-    qs: { locations: req.query.locations },
+    qs: { release_year: 2015, $limit: 20 },
     headers: { 'cache-control': 'no-cache',
       'x-app-token': 'YY1DPC0Yb3fwXPLdLl1RHlH6U',
     'content-type': 'application/json' },
@@ -16,4 +16,4 @@ const getMapData = (req, res) => {
   })
 }
 
-module.exports = { getMapData: getMapData }
+module.exports = { getInitialMovies: getInitialMovies }

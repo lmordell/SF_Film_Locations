@@ -10,6 +10,10 @@ class Map extends Component {
     super(props)
   }
 
+  componentDidMount () {
+    console.log('this props', this.props)
+  }
+
   render () {
     return (
 
