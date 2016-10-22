@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { GoogleMap, GoogleMapLoader, Marker } from 'react-google-maps'
+import { connect } from 'react-redux'
 
 import { default as FaSpinner } from 'react-icons/lib/fa/spinner'
 import { default as ScriptjsLoader } from 'react-google-maps/lib/async/ScriptjsLoader'
 
-export default class Map extends Component {
+class Map extends Component {
   constructor (props) {
     super(props)
   }
@@ -26,3 +27,9 @@ export default class Map extends Component {
     )
   }
 }
+
+function mapStateToProps ({movies}) {
+  return { movies}
+}
+
+export default connect(mapStateToProps)(Map)
