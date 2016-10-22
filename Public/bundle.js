@@ -31228,8 +31228,13 @@
 	      {
 	        var temp = {};
 	        temp.movieData = action.payload.data;
-	        var newState = _extends({}, state, temp);
 	        return _extends({}, state, temp);
+	      }
+	    case _actions_movies.UPDATE_ACTIVE_MOVIE:
+	      {
+	        var _temp = {};
+	        _temp.activeMovie = action.payload;
+	        return _extends({}, state, _temp);
 	      }
 	  }
 	  return state;
@@ -31248,8 +31253,9 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.GET_DEFAULT_MOVIES = undefined;
+	exports.UPDATE_ACTIVE_MOVIE = exports.GET_DEFAULT_MOVIES = undefined;
 	exports.getDefaultMovies = getDefaultMovies;
+	exports.updateActiveMovie = updateActiveMovie;
 
 	var _axios = __webpack_require__(351);
 
@@ -31258,6 +31264,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var GET_DEFAULT_MOVIES = exports.GET_DEFAULT_MOVIES = 'GET_DEFAULT_MOVIES';
+	var UPDATE_ACTIVE_MOVIE = exports.UPDATE_ACTIVE_MOVIE = 'UPDATE_ACTIVE_MOVIE';
 
 	function getDefaultMovies() {
 	  var request = _axios2.default.get('/api/movies/default');
@@ -31265,6 +31272,13 @@
 	  return {
 	    type: GET_DEFAULT_MOVIES,
 	    payload: request
+	  };
+	}
+
+	function updateActiveMovie(movie) {
+	  return {
+	    type: UPDATE_ACTIVE_MOVIE,
+	    payload: movie
 	  };
 	}
 
@@ -32806,26 +32820,13 @@
 	  function App(props) {
 	    _classCallCheck(this, App);
 
-	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
-
-	    _this.state = {
-	      defaultPosition: {
-	        lat: 37.77493,
-	        lng: -122.419416
-	      }
-	    };
-	    return _this;
+	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	  }
 
 	  _createClass(App, [{
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      var getDefaultMovies = this.props.getDefaultMovies;
-	      // before component mounts, get all movies from 2015
-	      // in next promise call get the lat / long of each films location
-	      // add the lat / long prop to each film
-	      // set the state of defaultResults to data of film + lat long
-	      // pass state to map
 	      // in map render the markers
 
 	      // Might need redux state for this..
@@ -32833,32 +32834,22 @@
 	      // data is displayed
 	      // on the side bar
 
-	      getDefaultMovies().then(function (movies) {
-	        console.log('movies', movies);
-	      });
+	      getDefaultMovies();
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _state$defaultPositio = this.state.defaultPosition;
-	      var lat = _state$defaultPositio.lat;
-	      var lng = _state$defaultPositio.lng;
-
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(_navbar2.default, null),
-	        _react2.default.createElement(_map_view2.default, { lat: lat, lon: lng })
+	        _react2.default.createElement(_map_view2.default, null)
 	      );
 	    }
 	  }]);
 
 	  return App;
 	}(_react.Component);
-
-	// function mapStateToProps ({movies}) {
-	//   return { movies}
-	// }
 
 	exports.default = (0, _reactRedux.connect)(null, { getDefaultMovies: _actions_movies.getDefaultMovies })(App);
 
@@ -66781,9 +66772,9 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactGoogleMaps = __webpack_require__(613);
-
 	var _reactRedux = __webpack_require__(318);
+
+	var _reactGoogleMaps = __webpack_require__(613);
 
 	var _spinner = __webpack_require__(659);
 
@@ -66793,6 +66784,8 @@
 
 	var _ScriptjsLoader2 = _interopRequireDefault(_ScriptjsLoader);
 
+	var _actions_movies = __webpack_require__(350);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -66801,23 +66794,51 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	// Google Maps React components
+
+
+	// Dispatch
+
+
 	var Map = function (_Component) {
 	  _inherits(Map, _Component);
 
 	  function Map(props) {
 	    _classCallCheck(this, Map);
 
-	    return _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (Map.__proto__ || Object.getPrototypeOf(Map)).call(this, props));
+
+	    _this.state = {
+	      defaultPosition: {
+	        lat: 37.77493,
+	        lon: -122.419416
+	      }
+	    };
+	    _this.renderMarkers = _this.renderMarkers.bind(_this);
+	    return _this;
 	  }
 
 	  _createClass(Map, [{
-	    key: 'componentDidMount',
-	    value: function componentDidMount() {
-	      console.log('this props', this.props);
+	    key: 'renderMarkers',
+	    value: function renderMarkers() {
+	      var _props = this.props;
+	      var movies = _props.movies;
+	      var updateActiveMovie = _props.updateActiveMovie;
+
+	      return movies.movieData.map(function (movie) {
+	        return _react2.default.createElement(_reactGoogleMaps.Marker, { key: movie.id, defaultPosition: { lat: movie.lat, lng: movie.lon }, onClick: function onClick() {
+	            return updateActiveMovie(movie);
+	          } });
+	      });
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _state$defaultPositio = this.state.defaultPosition;
+	      var lat = _state$defaultPositio.lat;
+	      var lon = _state$defaultPositio.lon;
+
+	      console.log('props in map', this.props);
 	      return _react2.default.createElement(_ScriptjsLoader2.default, {
 	        hostname: "maps.googleapis.com",
 	        pathname: "/maps/api/js",
@@ -66830,8 +66851,8 @@
 	        containerElement: _react2.default.createElement('div', { className: 'map' }),
 	        googleMapElement: _react2.default.createElement(
 	          _reactGoogleMaps.GoogleMap,
-	          { defaultZoom: 13, defaultCenter: { lat: this.props.lat, lng: this.props.lon } },
-	          _react2.default.createElement(_reactGoogleMaps.Marker, this.props.markerProps)
+	          { defaultZoom: 13, defaultCenter: { lat: lat, lng: lon } },
+	          this.renderMarkers()
 	        ) });
 	    }
 	  }]);
@@ -66845,7 +66866,7 @@
 	  return { movies: movies };
 	}
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps)(Map);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { updateActiveMovie: _actions_movies.updateActiveMovie })(Map);
 
 /***/ },
 /* 613 */

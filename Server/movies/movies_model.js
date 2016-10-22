@@ -3,6 +3,9 @@ const request = require('request')
 const db = require('../db/db')
 
 const getDefaultMovies = (req, res) => {
+  db.Movies.findAll()
+    .then(movies => res.status(200).send(movies))
+    .catch(err => res.status(404).send(err))
 }
 
 const addDefaultMovie = (req, res) => {
