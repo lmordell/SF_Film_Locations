@@ -1,42 +1,35 @@
+// libraries
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { AppBar, Drawer, MenuItem, TextField, ListItem } from 'material-ui/'
+import Autosuggest from 'react-autosuggest'
 import axios from 'axios'
 
-//components
+// dispatch
+import { getMovieQueryData } from '../actions/actions_movies'
+
+// autocomplete functions
+import { getSuggestions, getSuggestionValue, renderSuggestion, renderSectionTitle, getSectionSuggestions } from '../utils/autocomplete'
+
+// components
 import Movie from '../components/movie_detail'
-
-// utils
-import formatAddress from '../utils/format_address'
-
-
-// Set google autocomplete to component level scope to access throughout component
-let autocomplete
 
 class NavBar extends Component {
   constructor (props) {
     super(props)
 
-    this.state = { open: true }
+    this.state = {
+      open: true,
+      autocompleteVal: '',
+      autocompleteSuggestions: []
+    }
 
     this.handleOpenSideBar = this.handleOpenSideBar.bind(this)
     this.renderMovieDetails = this.renderMovieDetails.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  componentDidMount () {
-    let input = document.getElementById('searchTextField')
-    let southWestBounds
-    let northEastBounds
-    let sfCityBounds
-    // Async - wait for google api to load before defining vals
-    setTimeout(() => {
-      southWestBounds = new google.maps.LatLng(37.689178, -122.501335)
-      northEastBounds = new google.maps.LatLng(37.833844, -122.414818)
-      sfCityBounds = new google.maps.LatLngBounds(southWestBounds, northEastBounds)
-      let options = { bounds: sfCityBounds }
-      autocomplete = new google.maps.places.Autocomplete(input, options)
-    }, 300)
+    this.onChange = this.onChange.bind(this)
+    this.onSuggestionsFetchRequested = this.onSuggestionsFetchRequested.bind(this)
+    this.onSuggestionsClearRequested = this.onSuggestionsClearRequested.bind(this)
   }
 
   handleOpenSideBar () {
@@ -45,51 +38,68 @@ class NavBar extends Component {
 
   handleSubmit (e) {
     e.preventDefault()
-    let result = autocomplete.getPlace()
-    console.log('result ', result)
-    let lat = result.geometry.location.lat()
-    let lng = result.geometry.location.lng()
-    console.log('lat & lng', [lat, lng])
-    let formattedResult = formatAddress(result.address_components)
-    axios.get('/api/maps/data', {
-      params: {
-        locations: formattedResult
-      }
-    })
-      .then(locationResults => console.log('results from location query: ', locationResults))
+    this.props.getMovieQueryData(this.state.autocompleteVal)
   }
 
-  renderMovieDetails() {
-    if(this.props.movies.activeMovie.title) {
+  renderMovieDetails () {
+    if (this.props.movies.activeMovie.title) {
       return ( <Movie {...this.props.movies.activeMovie} /> )
     } else {
-      return ( 
-        <ListItem 
-        primaryText=' Click a marker to get movie details!'
-        secondaryText='Or search for locations in SF!'>
-        </ListItem> 
-        )
+      return (
+        <ListItem primaryText=' Click a marker to get movie details!' secondaryText='Or search for locations in SF!'>
+        </ListItem>
+      )
     }
+  }
+
+  onChange (event, { newValue }) {
+    this.setState({
+      autocompleteVal: newValue
+    })
+  }
+
+  onSuggestionsFetchRequested ({ value }) {
+    this.setState({
+      autocompleteSuggestions: getSuggestions(value)
+    })
+  }
+
+  onSuggestionsClearRequested () {
+    this.setState({
+      autocompleteSuggestions: []
+    })
   }
 
   render () {
     // Pushes the material ui siderbar to just below the navbar
     const forceNavDown = { 'top': '64px' }
+    const { autocompleteVal, autocompleteSuggestions } = this.state
+    const inputProps = {
+      placeholder: 'Search by Film Title',
+      value: autocompleteVal,
+      onChange: this.onChange
+    }
+
     return (
       <div>
         <AppBar onLeftIconButtonTouchTap={this.handleOpenSideBar} title='SF Film Locations' iconClassNameRight='muidocs-icon-navigation-expand-more' />
         <Drawer containerStyle={forceNavDown} width={300} open={this.state.open}>
           <MenuItem>
           <form onSubmit={this.handleSubmit}>
-            <TextField
-              id='searchTextField'
-              placeholder=''
-              floatingLabelText='Look for Film Locations'
-              fullWidth={true} />
+            <Autosuggest
+              multiSection={true}
+              suggestions={autocompleteSuggestions}
+              onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+              onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+              getSuggestionValue={getSuggestionValue}
+              renderSuggestion={renderSuggestion}
+              renderSectionTitle={renderSectionTitle}
+              getSectionSuggestions={getSectionSuggestions}
+              inputProps={inputProps} />
           </form>
           </MenuItem>
           <MenuItem>
-            {this.renderMovieDetails()}
+          {this.renderMovieDetails()}
           </MenuItem>
         </Drawer>
       </div>
@@ -98,7 +108,7 @@ class NavBar extends Component {
 }
 
 function mapStateToProps ({movies}) {
-  return { movies }
+  return {movies}
 }
 
-export default connect(mapStateToProps)(NavBar)
+export default connect(mapStateToProps, {getMovieQueryData})(NavBar)

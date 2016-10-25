@@ -1,5 +1,4 @@
 const rp = require('request-promise')
-const request = require('request')
 const db = require('../db/db')
 const config = require('../config')
 
@@ -28,6 +27,7 @@ const addDefaultMovie = (req, res) => {
 }
 
 const getMovieData = (req, res) => {
+  // Get data from api via movie title
   const options = { method: 'GET',
     url: 'https://data.sfgov.org/resource/wwmu-gmzc.json',
     qs: { title: req.query.title },
