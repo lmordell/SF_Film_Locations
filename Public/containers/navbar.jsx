@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppBar, Drawer, MenuItem, TextField } from 'material-ui/'
+import { AppBar, Drawer, MenuItem, TextField, ListItem } from 'material-ui/'
 import axios from 'axios'
 
 //components
@@ -17,9 +17,10 @@ class NavBar extends Component {
   constructor (props) {
     super(props)
 
-    this.state = { open: false }
+    this.state = { open: true }
 
     this.handleOpenSideBar = this.handleOpenSideBar.bind(this)
+    this.renderMovieDetails = this.renderMovieDetails.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
   }
 
@@ -58,14 +59,26 @@ class NavBar extends Component {
       .then(locationResults => console.log('results from location query: ', locationResults))
   }
 
+  renderMovieDetails() {
+    if(this.props.movies.activeMovie.title) {
+      return ( <Movie {...this.props.movies.activeMovie} /> )
+    } else {
+      return ( 
+        <ListItem 
+        primaryText=' Click a marker to get movie details!'
+        secondaryText='Or search for locations in SF!'>
+        </ListItem> 
+        )
+    }
+  }
+
   render () {
-    console.log(this.props.movies.activeMovie)
     // Pushes the material ui siderbar to just below the navbar
     const forceNavDown = { 'top': '64px' }
     return (
-      <div className='nav'>
+      <div>
         <AppBar onLeftIconButtonTouchTap={this.handleOpenSideBar} title='SF Film Locations' iconClassNameRight='muidocs-icon-navigation-expand-more' />
-        <Drawer containerStyle={forceNavDown} width={272} open={this.state.open}>
+        <Drawer containerStyle={forceNavDown} width={300} open={this.state.open}>
           <MenuItem>
           <form onSubmit={this.handleSubmit}>
             <TextField
@@ -76,7 +89,7 @@ class NavBar extends Component {
           </form>
           </MenuItem>
           <MenuItem>
-            <Movie {...this.props.movies.activeMovie} />
+            {this.renderMovieDetails()}
           </MenuItem>
         </Drawer>
       </div>

@@ -1,6 +1,7 @@
 const rp = require('request-promise')
 const request = require('request')
 const db = require('../db/db')
+const config = require('../config')
 
 const getDefaultMovies = (req, res) => {
   db.Movies.findAll()
@@ -9,7 +10,6 @@ const getDefaultMovies = (req, res) => {
 }
 
 const addDefaultMovie = (req, res) => {
-  console.log('db', db.Movies)
   db.Movies.create({
     title: req.body.title,
     release_year: req.body.release_year,
@@ -27,7 +27,24 @@ const addDefaultMovie = (req, res) => {
     .catch(err => res.status(404).send(err))
 }
 
+const getMovieData = (req, res) => {
+  const options = { method: 'GET',
+    url: 'https://data.sfgov.org/resource/wwmu-gmzc.json',
+    qs: { title: req.query.title },
+    headers: { 'cache-control': 'no-cache',
+      'x-app-token': config.token,
+    'content-type': 'application/json' },
+    json: true
+  }
+
+  rp(options)
+  .then(movies => res.status(200).send(movies))
+  .catch(err => res.status(404).send(err))
+ 
+}
+
 module.exports = {
   getDefaultMovies: getDefaultMovies,
-  addDefaultMovie: addDefaultMovie
+  addDefaultMovie: addDefaultMovie,
+  getMovieData: getMovieData
 }

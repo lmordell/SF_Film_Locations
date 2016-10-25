@@ -25,7 +25,11 @@ class Map extends Component {
   renderMarkers () {
     const { movies, updateActiveMovie } = this.props
     return movies.movieData.map((movie) => {
-      return <Marker key={movie.id} defaultPosition={{lat: movie.lat, lng: movie.lon}} onClick={() => updateActiveMovie(movie)} />
+      return <Marker 
+              key={movie.id} 
+              defaultPosition={{lat: movie.lat, lng: movie.lon}}
+              defaultAnimation={2} 
+              onClick={() => updateActiveMovie(movie)} />
     })
   }
 
