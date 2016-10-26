@@ -31236,6 +31236,13 @@
 	        _temp.activeMovie = action.payload;
 	        return _extends({}, state, _temp);
 	      }
+	    case _actions_movies.GET_MOVIE_QUERY_DATA:
+	      {
+	        console.log('data', action.payload);
+	        var _temp2 = {};
+	        _temp2.movieData = action.payload.data;
+	        return _extends({}, state, _temp2);
+	      }
 	  }
 	  return state;
 	};
@@ -31278,11 +31285,10 @@
 	}
 
 	function getMovieQueryData(title) {
-	  // format title
-	  var formattedTitle = title.split(' ').join('+');
+
 	  var request = _axios2.default.get('/api/movies/query', {
 	    params: {
-	      title: formattedTitle
+	      title: title
 	    }
 	  });
 
@@ -65173,8 +65179,9 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      // Pushes the material ui siderbar to just below the navbar
+	      // Pushes the material ui drawer to just below the navbar
 	      var forceNavDown = { 'top': '64px' };
+	      // Autocomplete props
 	      var _state = this.state;
 	      var autocompleteVal = _state.autocompleteVal;
 	      var autocompleteSuggestions = _state.autocompleteSuggestions;
@@ -67475,6 +67482,7 @@
 	      var lat = _state$defaultPositio.lat;
 	      var lng = _state$defaultPositio.lng;
 
+	      console.log('props in map', this.props.movies.movieData);
 	      return _react2.default.createElement(_ScriptjsLoader2.default, {
 	        hostname: "maps.googleapis.com",
 	        pathname: "/maps/api/js",

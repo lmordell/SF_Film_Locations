@@ -27,6 +27,7 @@ const addDefaultMovie = (req, res) => {
 }
 
 const getMovieData = (req, res) => {
+
   // Get data from api via movie title
   const options = { method: 'GET',
     url: 'https://data.sfgov.org/resource/wwmu-gmzc.json',
@@ -50,7 +51,7 @@ const getMovieData = (req, res) => {
           url: 'https://maps.googleapis.com/maps/api/geocode/json',
           qs: { address: address },
           headers: { 'cache-control': 'no-cache',
-            'key': config.google_api_token,
+          'key': config.google_api_token,
           'content-type': 'application/json' },
           json: true
         }
@@ -60,10 +61,10 @@ const getMovieData = (req, res) => {
         .then(locations => {
           // Add lat / lng to each film
           films.forEach((film, i) => {
+            film.id = i
             film.lat = locations[i].results[0].geometry.location.lat
             film.lng = locations[i].results[0].geometry.location.lng
           })
-
           res.status(200).send(films)
         })
     })

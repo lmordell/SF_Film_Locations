@@ -71,8 +71,9 @@ class NavBar extends Component {
   }
 
   render () {
-    // Pushes the material ui siderbar to just below the navbar
+    // Pushes the material ui drawer to just below the navbar
     const forceNavDown = { 'top': '64px' }
+    // Autocomplete props
     const { autocompleteVal, autocompleteSuggestions } = this.state
     const inputProps = {
       placeholder: 'Search by Film Title',

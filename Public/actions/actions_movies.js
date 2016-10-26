@@ -14,11 +14,10 @@ export function getDefaultMovies () {
 }
 
 export function getMovieQueryData (title) {
-  // format title
-  const formattedTitle = title.split(' ').join('+')
+
   const request = axios.get('/api/movies/query', {
     params: {
-      title: formattedTitle
+      title: title
     }
   })
 

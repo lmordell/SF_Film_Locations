@@ -25,16 +25,17 @@ class Map extends Component {
   renderMarkers () {
     const { movies, updateActiveMovie } = this.props
     return movies.movieData.map((movie) => {
-      return <Marker 
-              key={movie.id} 
-              defaultPosition={{lat: movie.lat, lng: movie.lon}}
-              defaultAnimation={2} 
-              onClick={() => updateActiveMovie(movie)} />
+      return <Marker
+               key={movie.id}
+               defaultPosition={{lat: movie.lat, lng: movie.lon}}
+               defaultAnimation={2}
+               onClick={() => updateActiveMovie(movie)} />
     })
   }
 
   render () {
     const { lat, lng } = this.state.defaultPosition
+    console.log('props in map', this.props.movies.movieData)
     return (
 
       <ScriptjsLoader
@@ -53,7 +54,7 @@ class Map extends Component {
 }
 
 function mapStateToProps ({movies}) {
-  return { movies }
+  return { movies}
 }
 
 export default connect(mapStateToProps, {updateActiveMovie})(Map)

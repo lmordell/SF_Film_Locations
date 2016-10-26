@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 
 const movieModel = require('./movies/movies_model')
-console.log(movieModel)
 
 router.get('/api/movies/query', (req, res) => {
   movieModel.getMovieData(req, res)
