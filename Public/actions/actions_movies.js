@@ -28,8 +28,9 @@ export function getMovieQueryData (title) {
 }
 
 export function updateActiveMovie (movie) {
+
   return {
     type: UPDATE_ACTIVE_MOVIE,
-    payload: movie
+    payload: movie 
   }
 }

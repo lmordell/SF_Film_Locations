@@ -31298,6 +31298,7 @@
 	}
 
 	function updateActiveMovie(movie) {
+
 	  return {
 	    type: UPDATE_ACTIVE_MOVIE,
 	    payload: movie
@@ -32807,13 +32808,9 @@
 
 	var _materialUi = __webpack_require__(383);
 
-	var _reactRedux = __webpack_require__(318);
-
 	var _axios = __webpack_require__(351);
 
 	var _axios2 = _interopRequireDefault(_axios);
-
-	var _actions_movies = __webpack_require__(350);
 
 	var _navbar = __webpack_require__(601);
 
@@ -32831,9 +32828,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	// Dispatches
-
-
+	//Function to allow material ui to handle mobile tap events
 	(0, _reactTapEventPlugin2.default)();
 
 	var App = function (_Component) {
@@ -32846,14 +32841,6 @@
 	  }
 
 	  _createClass(App, [{
-	    key: 'componentWillMount',
-	    value: function componentWillMount() {
-	      var getDefaultMovies = this.props.getDefaultMovies;
-	      //On page load, get locations for Mrs. Doubtfire as default
-
-	      getDefaultMovies();
-	    }
-	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
@@ -32868,7 +32855,7 @@
 	  return App;
 	}(_react.Component);
 
-	exports.default = (0, _reactRedux.connect)(null, { getDefaultMovies: _actions_movies.getDefaultMovies })(App);
+	exports.default = App;
 
 /***/ },
 /* 377 */
@@ -67361,6 +67348,12 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = function (props) {
+		var actors = [];
+		if (props.actor_1) actors.push(props.actor_1);
+		if (props.actor_2) actors.push(props.actor_2);
+		if (props.actor_3) actors.push(props.actor_3);
+		actors = actors.join(', ');
+
 		return _react2.default.createElement(
 			'div',
 			null,
@@ -67381,21 +67374,9 @@
 						props.release_year
 					)
 				),
-				_react2.default.createElement(
-					_List.ListItem,
-					{ disabled: true },
-					props.release_year ? 'Released in: ' + props.release_year : ''
-				),
-				_react2.default.createElement(
-					_List.ListItem,
-					{ disabled: true },
-					props.location ? 'Filmed at: ' + props.location : ''
-				),
-				_react2.default.createElement(
-					_List.ListItem,
-					{ disabled: true },
-					props.actors ? 'Starring: ' + props.actors : ''
-				)
+				_react2.default.createElement(_List.ListItem, { disabled: true, primaryText: 'Filmed at: ', secondaryText: props.locations }),
+				_react2.default.createElement(_List.ListItem, { disabled: true, primaryText: 'Starring: ', secondaryText: actors }),
+				_react2.default.createElement(_List.ListItem, { disabled: true, primaryText: 'Directed by: ', secondaryText: props.director })
 			)
 		);
 	};
@@ -67456,27 +67437,53 @@
 	      defaultPosition: {
 	        lat: 37.7943732,
 	        lng: -122.4133368
-	      }
+	      },
+	      showInfoWindow: false
 	    };
 	    _this.renderMarkers = _this.renderMarkers.bind(_this);
 	    return _this;
 	  }
 
 	  _createClass(Map, [{
+	    key: 'componentWillMount',
+	    value: function componentWillMount() {
+	      var getDefaultMovies = this.props.getDefaultMovies;
+	      //On page load, get locations for Mrs. Doubtfire as default
+
+	      getDefaultMovies();
+	    }
+	  }, {
 	    key: 'renderMarkers',
 	    value: function renderMarkers() {
+	      var _this2 = this;
+
 	      var _props = this.props;
 	      var movies = _props.movies;
 	      var updateActiveMovie = _props.updateActiveMovie;
 
 	      return movies.movieData.map(function (movie, i) {
-	        return _react2.default.createElement(_reactGoogleMaps.Marker, {
-	          key: i,
-	          defaultPosition: { lat: movie.lat, lng: movie.lng },
-	          defaultAnimation: 2,
-	          onClick: function onClick() {
-	            return updateActiveMovie(movie);
-	          } });
+	        return _react2.default.createElement(
+	          _reactGoogleMaps.Marker,
+	          {
+	            key: i,
+	            defaultPosition: { lat: movie.lat, lng: movie.lng },
+	            defaultAnimation: 2,
+	            onClick: function onClick() {
+	              _this2.setState({ showInfoWindow: true });
+	              updateActiveMovie(movie); //Update active movie in state
+	            } },
+	          _this2.state.showInfo ? _react2.default.createElement(
+	            _reactGoogleMaps.InfoWindow,
+	            { onCloseclick: function onCloseclick() {
+	                _this2.setState({ showInfoWindow: false });
+	              } },
+	            _react2.default.createElement(
+	              'div',
+	              null,
+	              movie.title
+	            )
+	          ) : null
+	        );
 	      });
 	    }
 	  }, {
@@ -67486,6 +67493,7 @@
 	      var lat = _state$defaultPositio.lat;
 	      var lng = _state$defaultPositio.lng;
 
+	      console.log(this.props.movies);
 	      return _react2.default.createElement(_ScriptjsLoader2.default, {
 	        hostname: "maps.googleapis.com",
 	        pathname: "/maps/api/js",
@@ -67513,7 +67521,7 @@
 	  return { movies: movies };
 	}
 
-	exports.default = (0, _reactRedux.connect)(mapStateToProps, { updateActiveMovie: _actions_movies.updateActiveMovie })(Map);
+	exports.default = (0, _reactRedux.connect)(mapStateToProps, { updateActiveMovie: _actions_movies.updateActiveMovie, getDefaultMovies: _actions_movies.getDefaultMovies })(Map);
 
 /***/ },
 /* 619 */

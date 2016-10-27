@@ -8,7 +8,7 @@ const getMovieData = (req, res) => {
     url: 'https://data.sfgov.org/resource/wwmu-gmzc.json',
     qs: { title: req.query.title },
     headers: { 'cache-control': 'no-cache',
-      'x-app-token': config.token,
+    'x-app-token': config.film_data_token,
     'content-type': 'application/json' },
     json: true
   }
@@ -26,7 +26,7 @@ const getMovieData = (req, res) => {
           url: 'https://maps.googleapis.com/maps/api/geocode/json',
           qs: { address: address },
           headers: { 'cache-control': 'no-cache',
-            'key': config.google_api_token,
+          'key': config.google_api_token,
           'content-type': 'application/json' },
           json: true
         }
