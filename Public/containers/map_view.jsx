@@ -15,8 +15,8 @@ class Map extends Component {
 
     this.state = {
       defaultPosition: {
-        lat: 37.77493,
-        lng: -122.419416
+        lat: 37.7943732,
+        lng: -122.4133368
       }
     }
     this.renderMarkers = this.renderMarkers.bind(this)
@@ -24,10 +24,10 @@ class Map extends Component {
 
   renderMarkers () {
     const { movies, updateActiveMovie } = this.props
-    return movies.movieData.map((movie) => {
+    return movies.movieData.map((movie, i) => {
       return <Marker
-               key={movie.id}
-               defaultPosition={{lat: movie.lat, lng: movie.lon}}
+               key={i}
+               defaultPosition={{lat: movie.lat, lng: movie.lng}}
                defaultAnimation={2}
                onClick={() => updateActiveMovie(movie)} />
     })
@@ -35,7 +35,6 @@ class Map extends Component {
 
   render () {
     const { lat, lng } = this.state.defaultPosition
-    console.log('props in map', this.props.movies.movieData)
     return (
 
       <ScriptjsLoader
@@ -46,7 +45,7 @@ class Map extends Component {
                           <FaSpinner />
                         </div>}
         containerElement={<div className='map' />}
-        googleMapElement={<GoogleMap defaultZoom={13} defaultCenter={{lat: lat, lng: lng }}>
+        googleMapElement={<GoogleMap defaultZoom={14} defaultCenter={{lat: lat, lng: lng }}>
                             {this.renderMarkers()}
                           </GoogleMap>} />
     )

@@ -2,6 +2,22 @@ import React from 'react'
 
 const filmOptions = [
   {
+    letter: '#',
+    movies: [ { title: '50 First Dates' }]
+  },
+  {
+    letter: 'A',
+    movies: [ { title: 'About a Boy' }, { title: 'Ant-Man' }]
+  },
+  {
+    letter: 'B',
+    movies: [ { title: 'Basic Instinct' }, { title: 'Blue Jasmine'} ]
+  },
+  {
+    letter: 'D',
+    movies: [ { title: 'Dawn of the Planet of the Apes' } ]
+  },
+  {
     letter: 'M',
     movies: [ { title: 'Mrs. Doubtfire' }]
   }

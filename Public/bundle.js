@@ -31238,7 +31238,6 @@
 	      }
 	    case _actions_movies.GET_MOVIE_QUERY_DATA:
 	      {
-	        console.log('data', action.payload);
 	        var _temp2 = {};
 	        _temp2.movieData = action.payload.data;
 	        return _extends({}, state, _temp2);
@@ -31276,7 +31275,8 @@
 	var UPDATE_ACTIVE_MOVIE = exports.UPDATE_ACTIVE_MOVIE = 'UPDATE_ACTIVE_MOVIE';
 
 	function getDefaultMovies() {
-	  var request = _axios2.default.get('/api/movies/default');
+	  //Get default data about Mrs. Doubtfire
+	  var request = _axios2.default.get('/api/movies/query/?title=Mrs.+Doubtfire');
 
 	  return {
 	    type: GET_DEFAULT_MOVIES,
@@ -31285,7 +31285,6 @@
 	}
 
 	function getMovieQueryData(title) {
-
 	  var request = _axios2.default.get('/api/movies/query', {
 	    params: {
 	      title: title
@@ -32850,12 +32849,7 @@
 	    key: 'componentWillMount',
 	    value: function componentWillMount() {
 	      var getDefaultMovies = this.props.getDefaultMovies;
-	      // in map render the markers
-
-	      // Might need redux state for this..
-	      // On Marker click, 'active movie' gets updated in state, and active movie 
-	      // data is displayed
-	      // on the side bar
+	      //On page load, get locations for Mrs. Doubtfire as default
 
 	      getDefaultMovies();
 	    }
@@ -67282,6 +67276,18 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var filmOptions = [{
+	  letter: '#',
+	  movies: [{ title: '50 First Dates' }]
+	}, {
+	  letter: 'A',
+	  movies: [{ title: 'About a Boy' }, { title: 'Ant-Man' }]
+	}, {
+	  letter: 'B',
+	  movies: [{ title: 'Basic Instinct' }, { title: 'Blue Jasmine' }]
+	}, {
+	  letter: 'D',
+	  movies: [{ title: 'Dawn of the Planet of the Apes' }]
+	}, {
 	  letter: 'M',
 	  movies: [{ title: 'Mrs. Doubtfire' }]
 	}];
@@ -67348,6 +67354,10 @@
 
 	var _List = __webpack_require__(534);
 
+	var _Avatar = __webpack_require__(466);
+
+	var _Avatar2 = _interopRequireDefault(_Avatar);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	exports.default = function (props) {
@@ -67359,8 +67369,17 @@
 				null,
 				_react2.default.createElement(
 					_List.ListItem,
-					{ disabled: true },
-					props.title ? 'Title: ' + props.title : ''
+					{
+						disabled: true,
+						leftAvatar: _react2.default.createElement(_Avatar2.default, { src: 'https://cdn2.iconfinder.com/data/icons/cinema-and-television/500/Entertainment_film_film_reel_film_roll_movie_reel_roll_theate-512.png' })
+					},
+					props.title,
+					' ',
+					_react2.default.createElement(
+						'small',
+						null,
+						props.release_year
+					)
 				),
 				_react2.default.createElement(
 					_List.ListItem,
@@ -67376,21 +67395,6 @@
 					_List.ListItem,
 					{ disabled: true },
 					props.actors ? 'Starring: ' + props.actors : ''
-				),
-				_react2.default.createElement(
-					_List.ListItem,
-					{ disabled: true },
-					props.director ? 'Directed by: ' + props.director : ''
-				),
-				_react2.default.createElement(
-					_List.ListItem,
-					{ disabled: true },
-					props.writer ? 'Written by: ' + props.writer : ''
-				),
-				_react2.default.createElement(
-					_List.ListItem,
-					{ disabled: true },
-					props.production_company ? 'Produced by: ' + props.production_company : ''
 				)
 			)
 		);
@@ -67450,8 +67454,8 @@
 
 	    _this.state = {
 	      defaultPosition: {
-	        lat: 37.77493,
-	        lng: -122.419416
+	        lat: 37.7943732,
+	        lng: -122.4133368
 	      }
 	    };
 	    _this.renderMarkers = _this.renderMarkers.bind(_this);
@@ -67465,10 +67469,10 @@
 	      var movies = _props.movies;
 	      var updateActiveMovie = _props.updateActiveMovie;
 
-	      return movies.movieData.map(function (movie) {
+	      return movies.movieData.map(function (movie, i) {
 	        return _react2.default.createElement(_reactGoogleMaps.Marker, {
-	          key: movie.id,
-	          defaultPosition: { lat: movie.lat, lng: movie.lon },
+	          key: i,
+	          defaultPosition: { lat: movie.lat, lng: movie.lng },
 	          defaultAnimation: 2,
 	          onClick: function onClick() {
 	            return updateActiveMovie(movie);
@@ -67482,7 +67486,6 @@
 	      var lat = _state$defaultPositio.lat;
 	      var lng = _state$defaultPositio.lng;
 
-	      console.log('props in map', this.props.movies.movieData);
 	      return _react2.default.createElement(_ScriptjsLoader2.default, {
 	        hostname: "maps.googleapis.com",
 	        pathname: "/maps/api/js",
@@ -67495,7 +67498,7 @@
 	        containerElement: _react2.default.createElement('div', { className: 'map' }),
 	        googleMapElement: _react2.default.createElement(
 	          _reactGoogleMaps.GoogleMap,
-	          { defaultZoom: 13, defaultCenter: { lat: lat, lng: lng } },
+	          { defaultZoom: 14, defaultCenter: { lat: lat, lng: lng } },
 	          this.renderMarkers()
 	        ) });
 	    }

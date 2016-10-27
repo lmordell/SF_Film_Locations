@@ -5,7 +5,8 @@ export const GET_MOVIE_QUERY_DATA = 'GET_MOVIE_QUERY_DATA'
 export const UPDATE_ACTIVE_MOVIE = 'UPDATE_ACTIVE_MOVIE'
 
 export function getDefaultMovies () {
-  const request = axios.get('/api/movies/default')
+  //Get default data about Mrs. Doubtfire
+  const request = axios.get('/api/movies/query/?title=Mrs.+Doubtfire')
 
   return {
     type: GET_DEFAULT_MOVIES,
@@ -14,7 +15,6 @@ export function getDefaultMovies () {
 }
 
 export function getMovieQueryData (title) {
-
   const request = axios.get('/api/movies/query', {
     params: {
       title: title

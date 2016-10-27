@@ -19,12 +19,7 @@ class App extends Component {
 
   componentWillMount () {
     const { getDefaultMovies } = this.props
-    // in map render the markers
-
-    // Might need redux state for this..
-    // On Marker click, 'active movie' gets updated in state, and active movie 
-    // data is displayed
-    // on the side bar
+    //On page load, get locations for Mrs. Doubtfire as default
     getDefaultMovies()
   }
 
@@ -37,6 +32,5 @@ class App extends Component {
     )
   }
 }
-
 
 export default connect(null, {getDefaultMovies})(App)

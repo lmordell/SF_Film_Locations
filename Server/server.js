@@ -3,10 +3,6 @@ const cors = require('cors')
 const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const routesMain = require('./routes_main')
-
-// Requiring DB
-const db = require('./db/db').main
-
 const app = express()
 
 // App level middleware

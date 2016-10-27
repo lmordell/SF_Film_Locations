@@ -15,7 +15,6 @@ export default function(state = INITIAL_STATE , action) {
       return {...state, ...temp}
     }
     case GET_MOVIE_QUERY_DATA: {
-      console.log('data', action.payload)
       let temp = {}
       temp.movieData = action.payload.data
       return {...state, ...temp}
