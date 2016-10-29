@@ -3,11 +3,22 @@ import { connect } from 'react-redux'
 
 // Google Maps React components
 import { GoogleMap, GoogleMapLoader, Marker, InfoWindow } from 'react-google-maps'
+import ReactStreetview from 'react-streetview'
 import { default as FaSpinner } from 'react-icons/lib/fa/spinner'
 import { default as ScriptjsLoader } from 'react-google-maps/lib/async/ScriptjsLoader'
 
 // Dispatch
 import { updateActiveMovie, getDefaultMovies } from '../actions/actions_movies'
+
+//Google API Key
+import apiKey from '../utils/config'
+
+//StreetView Options
+const streetViewPanoramaOptions = {
+            position: {lat: 46.9171876, lng: 17.8951832},
+            pov: {heading: 100, pitch: 0},
+            zoom: 1
+        }
 
 class Map extends Component {
   constructor (props) {
@@ -18,9 +29,10 @@ class Map extends Component {
         lat: 37.7943732,
         lng: -122.4133368
       },
-      showInfoWindow: false
+      showInfo: {}
     }
     this.renderMarkers = this.renderMarkers.bind(this)
+    this.renderInfoWindow = this.renderInfoWindow.bind(this)
   }
 
   componentWillMount () {
@@ -29,27 +41,47 @@ class Map extends Component {
     getDefaultMovies()
   }
 
+  //function to setState on dynamically rendered keys
+  renderInfoWindow(boolean, index) {
+  let showInfo = {}
+    showInfo[index] = boolean
+    this.setState(showInfo)
+  }
 
+  updateStreetView(lat,  lng) {
+    streetViewPanoramaOptions.position = { lat: lat, lng: lng }
+  }
 
   renderMarkers () {
+    // console.log(this.props)
     const { movies, updateActiveMovie } = this.props
     return movies.movieData.map((movie, i) => {
+      //set show info for each marker to false
+      this.state.showInfo[i] = false
       return <Marker
                key={i}
-               defaultPosition={{lat: movie.lat, lng: movie.lng}}
+               position={{lat: movie.lat, lng: movie.lng}}
                defaultAnimation={2}
                onClick={() => {
-                this.setState({ showInfoWindow: true })
+                this.updateStreetView(movie.lat, movie.lng)
+                this.renderInfoWindow(true, i)
                 updateActiveMovie(movie) //Update active movie in state
                }
               }>
-              {
-              this.state.showInfo ?
-                <InfoWindow onCloseclick={() => { this.setState({ showInfoWindow: false }) }}>
-                  <div>{movie.title}</div>
-                </InfoWindow>
-                : null
-              }
+              { this.state[i] ?
+                    <InfoWindow onCloseclick={(e) => { this.renderInfoWindow(false, i)  }}>
+                        <div>
+                          <div>{movie.title}</div>
+                          <div>{movie.locations}</div>
+                          <div style={{ width: '230px', height: '200px' }}>
+                            <ReactStreetview 
+                            apiKey={apiKey}
+                            streetViewPanoramaOptions={streetViewPanoramaOptions} />
+                          </div>
+                        </div>
+                    </InfoWindow>
+                    : null
+                }
               </Marker>
     })
   }
@@ -62,7 +94,7 @@ class Map extends Component {
       <ScriptjsLoader
         hostname={"maps.googleapis.com"}
         pathname={"/maps/api/js"}
-        query={{ key: 'AIzaSyBi5gLmdXNTcFlB04hUijdJ_3fdEUb8bkA',  libraries: 'geometry,drawing,places'}}
+        query={{ key: apiKey,  libraries: 'geometry,drawing,places'}}
         loadingElement={<div>
                           <FaSpinner />
                         </div>}

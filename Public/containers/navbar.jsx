@@ -21,7 +21,8 @@ class NavBar extends Component {
     this.state = {
       open: true,
       autocompleteVal: '',
-      autocompleteSuggestions: []
+      autocompleteSuggestions: [],
+      isFetchingData: false
     }
 
     this.handleOpenSideBar = this.handleOpenSideBar.bind(this)
@@ -38,13 +39,27 @@ class NavBar extends Component {
 
   handleSubmit (e) {
     e.preventDefault()
+    this.setState({ isFetchingData: true })
     this.props.getMovieQueryData(this.state.autocompleteVal)
+    .then(() => this.setState({ isFetchingData: false}))
   }
 
   renderMovieDetails () {
-    if (this.props.movies.activeMovie.title) {
-      return ( <Movie {...this.props.movies.activeMovie} /> )
-    } else {
+    const { activeMovie, status } = this.props.movies
+    const { isFetchingData } = this.state
+    if(isFetchingData) {
+      return ( <img src='../assets/loading.gif' className='spinner' /> )
+    }
+    // If the user has clicked on a marker, show details in sidebar
+    if (activeMovie.title && status !== 404 && !isFetchingData) {
+      return ( <Movie {...activeMovie} /> )
+    }
+    //Display error message in sidebar when a movie can't be fetched
+    if (status == 404 && !isFetchingData) {
+      return ( <ListItem primaryText='Whoops!' secondaryText='Looks like we couldnt find any information for that film'></ListItem>)
+    } 
+    //If the user has not clicked on marker, display default information
+    if(!activeMovie.title && !isFetchingData) {
       return (
         <ListItem primaryText=' Click a marker to get movie details!' secondaryText='Or search for locations in SF!'>
         </ListItem>

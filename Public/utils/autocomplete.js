@@ -15,11 +15,43 @@ const filmOptions = [
   },
   {
     letter: 'D',
-    movies: [ { title: 'Dawn of the Planet of the Apes' } ]
+    movies: [ { title: 'Dawn of the Planet of the Apes' }, { title: 'Dirty Harry' }, { title: 'Doctor Dolittle' } ]
+  },
+  {
+    letter: 'G',
+    movies: [ { title: 'Godzilla' }]
+  },
+  {
+    letter: 'I',
+    movies: [ { title: 'Invasion of the Body Snatchers' }]
+  },
+  {
+    letter: 'J',
+    movies: [ { title: 'Joy Luck Club' }, { title: 'Junior' }]
   },
   {
     letter: 'M',
-    movies: [ { title: 'Mrs. Doubtfire' }]
+    movies: [ { title: 'Mrs. Doubtfire' }, { title: 'Magnum Force' }, { title: 'Milk' }]
+  },
+  {
+    letter: 'N',
+    movies: [ { title: 'Need for Speed' }]
+  },
+  {
+    letter: 'P',
+    movies: [ { title: 'Patch Adams' }]
+  },
+  {
+    letter: 'S',
+    movies: [ { title: 'San Andreas' }, { title: 'Sense8'}, { title: 'So I Married an Axe Murderer'}, { title: 'Steve Jobs'} ]
+  },
+  {
+    letter: 'T',
+    movies: [ { title: 'Terminator - Genisys' }, { title: 'The Deadpool' }, { title: 'The Pursuit of Happyness' }, { title: 'The Rock' }, { title: 'The Wedding Planner' }]
+  },
+  {
+    letter: 'V',
+    movies: [ { title: 'Vertigo' }]
   }
 ]
 

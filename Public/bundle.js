@@ -31227,7 +31227,14 @@
 	    case _actions_movies.GET_DEFAULT_MOVIES:
 	      {
 	        var temp = {};
-	        temp.movieData = action.payload.data;
+	        //Update state in case data can not be fetched
+	        if (action.error) {
+	          temp.status = 404;
+	          temp.movieData = [];
+	          return _extends({}, state, temp);
+	        }
+	        temp.movieData = action.payload.data.films;
+	        temp.status = action.payload.data.status;
 	        return _extends({}, state, temp);
 	      }
 	    case _actions_movies.UPDATE_ACTIVE_MOVIE:
@@ -31239,7 +31246,14 @@
 	    case _actions_movies.GET_MOVIE_QUERY_DATA:
 	      {
 	        var _temp2 = {};
-	        _temp2.movieData = action.payload.data;
+	        //Update state in case data can not be fetched
+	        if (action.error) {
+	          _temp2.status = 404;
+	          _temp2.movieData = [];
+	          return _extends({}, state, _temp2);
+	        }
+	        _temp2.movieData = action.payload.data.films;
+	        _temp2.status = action.payload.data.status;
 	        return _extends({}, state, _temp2);
 	      }
 	  }
@@ -31248,7 +31262,7 @@
 
 	var _actions_movies = __webpack_require__(350);
 
-	var INITIAL_STATE = { movieData: [], activeMovie: {} };
+	var INITIAL_STATE = { movieData: [], activeMovie: {}, status: null };
 
 /***/ },
 /* 350 */
@@ -65100,7 +65114,8 @@
 	    _this.state = {
 	      open: true,
 	      autocompleteVal: '',
-	      autocompleteSuggestions: []
+	      autocompleteSuggestions: [],
+	      isFetchingData: false
 	    };
 
 	    _this.handleOpenSideBar = _this.handleOpenSideBar.bind(_this);
@@ -65120,15 +65135,35 @@
 	  }, {
 	    key: 'handleSubmit',
 	    value: function handleSubmit(e) {
+	      var _this2 = this;
+
 	      e.preventDefault();
-	      this.props.getMovieQueryData(this.state.autocompleteVal);
+	      this.setState({ isFetchingData: true });
+	      this.props.getMovieQueryData(this.state.autocompleteVal).then(function () {
+	        return _this2.setState({ isFetchingData: false });
+	      });
 	    }
 	  }, {
 	    key: 'renderMovieDetails',
 	    value: function renderMovieDetails() {
-	      if (this.props.movies.activeMovie.title) {
-	        return _react2.default.createElement(_movie_detail2.default, this.props.movies.activeMovie);
-	      } else {
+	      var _props$movies = this.props.movies;
+	      var activeMovie = _props$movies.activeMovie;
+	      var status = _props$movies.status;
+	      var isFetchingData = this.state.isFetchingData;
+
+	      if (isFetchingData) {
+	        return _react2.default.createElement('img', { src: '../assets/loading.gif', className: 'spinner' });
+	      }
+	      // If the user has clicked on a marker, show details in sidebar
+	      if (activeMovie.title && status !== 404 && !isFetchingData) {
+	        return _react2.default.createElement(_movie_detail2.default, activeMovie);
+	      }
+	      //Display error message in sidebar when a movie can't be fetched
+	      if (status == 404 && !isFetchingData) {
+	        return _react2.default.createElement(_materialUi.ListItem, { primaryText: 'Whoops!', secondaryText: 'Looks like we couldnt find any information for that film' });
+	      }
+	      //If the user has not clicked on marker, display default information
+	      if (!activeMovie.title && !isFetchingData) {
 	        return _react2.default.createElement(_materialUi.ListItem, { primaryText: ' Click a marker to get movie details!', secondaryText: 'Or search for locations in SF!' });
 	      }
 	    }
@@ -67273,10 +67308,34 @@
 	  movies: [{ title: 'Basic Instinct' }, { title: 'Blue Jasmine' }]
 	}, {
 	  letter: 'D',
-	  movies: [{ title: 'Dawn of the Planet of the Apes' }]
+	  movies: [{ title: 'Dawn of the Planet of the Apes' }, { title: 'Dirty Harry' }, { title: 'Doctor Dolittle' }]
+	}, {
+	  letter: 'G',
+	  movies: [{ title: 'Godzilla' }]
+	}, {
+	  letter: 'I',
+	  movies: [{ title: 'Invasion of the Body Snatchers' }]
+	}, {
+	  letter: 'J',
+	  movies: [{ title: 'Joy Luck Club' }, { title: 'Junior' }]
 	}, {
 	  letter: 'M',
-	  movies: [{ title: 'Mrs. Doubtfire' }]
+	  movies: [{ title: 'Mrs. Doubtfire' }, { title: 'Magnum Force' }, { title: 'Milk' }]
+	}, {
+	  letter: 'N',
+	  movies: [{ title: 'Need for Speed' }]
+	}, {
+	  letter: 'P',
+	  movies: [{ title: 'Patch Adams' }]
+	}, {
+	  letter: 'S',
+	  movies: [{ title: 'San Andreas' }, { title: 'Sense8' }, { title: 'So I Married an Axe Murderer' }, { title: 'Steve Jobs' }]
+	}, {
+	  letter: 'T',
+	  movies: [{ title: 'Terminator - Genisys' }, { title: 'The Deadpool' }, { title: 'The Pursuit of Happyness' }, { title: 'The Rock' }, { title: 'The Wedding Planner' }]
+	}, {
+	  letter: 'V',
+	  movies: [{ title: 'Vertigo' }]
 	}];
 
 	function escapeRegexCharacters(str) {
@@ -67401,15 +67460,23 @@
 
 	var _reactGoogleMaps = __webpack_require__(619);
 
-	var _spinner = __webpack_require__(665);
+	var _reactStreetview = __webpack_require__(665);
+
+	var _reactStreetview2 = _interopRequireDefault(_reactStreetview);
+
+	var _spinner = __webpack_require__(667);
 
 	var _spinner2 = _interopRequireDefault(_spinner);
 
-	var _ScriptjsLoader = __webpack_require__(667);
+	var _ScriptjsLoader = __webpack_require__(669);
 
 	var _ScriptjsLoader2 = _interopRequireDefault(_ScriptjsLoader);
 
 	var _actions_movies = __webpack_require__(350);
+
+	var _config = __webpack_require__(686);
+
+	var _config2 = _interopRequireDefault(_config);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -67425,6 +67492,16 @@
 	// Dispatch
 
 
+	//Google API Key
+
+
+	//StreetView Options
+	var streetViewPanoramaOptions = {
+	  position: { lat: 46.9171876, lng: 17.8951832 },
+	  pov: { heading: 100, pitch: 0 },
+	  zoom: 1
+	};
+
 	var Map = function (_Component) {
 	  _inherits(Map, _Component);
 
@@ -67438,9 +67515,10 @@
 	        lat: 37.7943732,
 	        lng: -122.4133368
 	      },
-	      showInfoWindow: false
+	      showInfo: {}
 	    };
 	    _this.renderMarkers = _this.renderMarkers.bind(_this);
+	    _this.renderInfoWindow = _this.renderInfoWindow.bind(_this);
 	    return _this;
 	  }
 
@@ -67452,35 +67530,70 @@
 
 	      getDefaultMovies();
 	    }
+
+	    //function to setState on dynamically rendered keys
+
+	  }, {
+	    key: 'renderInfoWindow',
+	    value: function renderInfoWindow(boolean, index) {
+	      var showInfo = {};
+	      showInfo[index] = boolean;
+	      this.setState(showInfo);
+	    }
+	  }, {
+	    key: 'updateStreetView',
+	    value: function updateStreetView(lat, lng) {
+	      streetViewPanoramaOptions.position = { lat: lat, lng: lng };
+	    }
 	  }, {
 	    key: 'renderMarkers',
 	    value: function renderMarkers() {
 	      var _this2 = this;
 
+	      // console.log(this.props)
 	      var _props = this.props;
 	      var movies = _props.movies;
 	      var updateActiveMovie = _props.updateActiveMovie;
 
 	      return movies.movieData.map(function (movie, i) {
+	        //set show info for each marker to false
+	        _this2.state.showInfo[i] = false;
 	        return _react2.default.createElement(
 	          _reactGoogleMaps.Marker,
 	          {
 	            key: i,
-	            defaultPosition: { lat: movie.lat, lng: movie.lng },
+	            position: { lat: movie.lat, lng: movie.lng },
 	            defaultAnimation: 2,
 	            onClick: function onClick() {
-	              _this2.setState({ showInfoWindow: true });
+	              _this2.updateStreetView(movie.lat, movie.lng);
+	              _this2.renderInfoWindow(true, i);
 	              updateActiveMovie(movie); //Update active movie in state
 	            } },
-	          _this2.state.showInfo ? _react2.default.createElement(
+	          _this2.state[i] ? _react2.default.createElement(
 	            _reactGoogleMaps.InfoWindow,
-	            { onCloseclick: function onCloseclick() {
-	                _this2.setState({ showInfoWindow: false });
+	            { onCloseclick: function onCloseclick(e) {
+	                _this2.renderInfoWindow(false, i);
 	              } },
 	            _react2.default.createElement(
 	              'div',
 	              null,
-	              movie.title
+	              _react2.default.createElement(
+	                'div',
+	                null,
+	                movie.title
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                null,
+	                movie.locations
+	              ),
+	              _react2.default.createElement(
+	                'div',
+	                { style: { width: '230px', height: '200px' } },
+	                _react2.default.createElement(_reactStreetview2.default, {
+	                  apiKey: _config2.default,
+	                  streetViewPanoramaOptions: streetViewPanoramaOptions })
+	              )
 	            )
 	          ) : null
 	        );
@@ -67497,7 +67610,7 @@
 	      return _react2.default.createElement(_ScriptjsLoader2.default, {
 	        hostname: "maps.googleapis.com",
 	        pathname: "/maps/api/js",
-	        query: { key: 'AIzaSyBi5gLmdXNTcFlB04hUijdJ_3fdEUb8bkA', libraries: 'geometry,drawing,places' },
+	        query: { key: _config2.default, libraries: 'geometry,drawing,places' },
 	        loadingElement: _react2.default.createElement(
 	          'div',
 	          null,
@@ -71813,6 +71926,296 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, '__esModule', {
+		value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(35);
+
+	var _reactDom2 = _interopRequireDefault(_reactDom);
+
+	var _reactAsyncLoader = __webpack_require__(666);
+
+	var _reactAsyncLoader2 = _interopRequireDefault(_reactAsyncLoader);
+
+	var ReactStreetview = (function (_React$Component) {
+		_inherits(ReactStreetview, _React$Component);
+
+		function ReactStreetview() {
+			_classCallCheck(this, ReactStreetview);
+
+			_get(Object.getPrototypeOf(ReactStreetview.prototype), 'constructor', this).call(this);
+			this.state = {
+				streetView: null,
+				domElementId: 'street-view-' + Math.floor(Math.random() * 1000000)
+			};
+		}
+
+		_createClass(ReactStreetview, [{
+			key: 'initialize',
+			value: function initialize(canvas) {
+				if (this.props.googleMaps && this.state.streetView == null) {
+					var googleMaps = this.props.googleMaps;
+
+					this.state.streetView = new googleMaps.StreetViewPanorama(canvas, this.props.streetViewPanoramaOptions);
+				}
+			}
+		}, {
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				this.initialize(_reactDom2['default'].findDOMNode(this));
+			}
+		}, {
+			key: 'componentDidUpdate',
+			value: function componentDidUpdate() {
+				this.initialize(_reactDom2['default'].findDOMNode(this));
+			}
+		}, {
+			key: 'render',
+			value: function render() {
+				return _react2['default'].createElement('div', {
+					style: {
+						height: '100%'
+					},
+					id: this.state.domElementId
+				});
+			}
+		}]);
+
+		return ReactStreetview;
+	})(_react2['default'].Component);
+
+	ReactStreetview.propTypes = {
+		apiKey: _react2['default'].PropTypes.string.isRequired,
+		streetViewPanoramaOptions: _react2['default'].PropTypes.object.isRequired
+	};
+
+	ReactStreetview.defaultProps = {
+		streetViewPanoramaOptions: {
+			position: { lat: 46.9171876, lng: 17.8951832 },
+			pov: { heading: 0, pitch: 0 },
+			zoom: 1
+		}
+	};
+
+	function mapScriptsToProps(props) {
+		var googleMapsApiKey = props.apiKey;
+		return {
+			googleMaps: {
+				globalPath: 'google.maps',
+				url: 'https://maps.googleapis.com/maps/api/js?key=' + googleMapsApiKey,
+				jsonp: true
+			}
+		};
+	}
+
+	exports['default'] = (0, _reactAsyncLoader2['default'])(mapScriptsToProps)(ReactStreetview);
+	module.exports = exports['default'];
+
+/***/ },
+/* 666 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+	var _react = __webpack_require__(2);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _hoistNonReactStatics = __webpack_require__(339);
+
+	var _hoistNonReactStatics2 = _interopRequireDefault(_hoistNonReactStatics);
+
+	function getDisplayName(Component) {
+	  return Component.displayName || Component.name || 'Component';
+	}
+
+	function getScript(globalPath) {
+
+	  if (typeof window === 'undefined') {
+	    return null;
+	  }
+
+	  var paths = globalPath.split('.');
+	  var root = window;
+
+	  for (var i = 0; i < paths.length; i++) {
+	    var path = paths[i];
+	    var prop = root[path];
+
+	    if (typeof prop === 'undefined') {
+	      return null;
+	    }
+
+	    root = prop;
+	  }
+
+	  return root;
+	}
+
+	function getScriptLoader(dep, callback) {
+	  var _this = this;
+
+	  if (typeof document === 'undefined') {
+	    return null;
+	  }
+
+	  var globalPath = dep.globalPath;
+	  var url = dep.url;
+	  var jsonp = dep.jsonp;
+
+	  var scriptLoader = document.createElement('script');
+
+	  if (jsonp) {
+	    var _dep$callbackName = dep.callbackName;
+	    var callbackName = _dep$callbackName === undefined ? '_async_' + globalPath.replace('.', '_') : _dep$callbackName;
+
+	    url = '' + url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + callbackName;
+
+	    window[callbackName] = callback;
+	  } else {
+	    scriptLoader.onload = callback;
+	    scriptLoader.onreadystatechange = function () {
+	      if (_this.readyState === 'loaded') {
+	        window.setTimeout(scriptLoader.onload, 0);
+	      }
+	    };
+	  }
+
+	  scriptLoader.async = 1;
+	  scriptLoader.src = url;
+
+	  return scriptLoader;
+	}
+
+	var asyncLoad = function asyncLoad(mapScriptsToProps) {
+
+	  function getInitialState(props) {
+	    var dependencies = mapScriptsToProps(props);
+
+	    return Object.keys(dependencies).reduce(function (states, name) {
+	      return _extends({}, states, _defineProperty({}, name, getScript(dependencies[name].globalPath)));
+	    }, {});
+	  }
+
+	  return function (Component) {
+	    var AsyncLoaded = (function (_React$Component) {
+	      _inherits(AsyncLoaded, _React$Component);
+
+	      function AsyncLoaded() {
+	        _classCallCheck(this, AsyncLoaded);
+
+	        _get(Object.getPrototypeOf(AsyncLoaded.prototype), 'constructor', this).apply(this, arguments);
+
+	        this.displayName = 'AsyncLoaded(' + getDisplayName(Component) + ')';
+	        this.state = getInitialState(this.props);
+	      }
+
+	      _createClass(AsyncLoaded, [{
+	        key: 'loadScripts',
+	        value: function loadScripts(dependencies) {
+	          var _this2 = this;
+
+	          return Object.keys(dependencies).filter(function (name) {
+	            return _this2.state[name] === null;
+	          }).map(function (name) {
+	            var dep = dependencies[name];
+	            return getScriptLoader(dep, _this2.loadHandler.bind(_this2, name, dep.globalPath));
+	          }).map(function (scriptLoader) {
+	            if (typeof document !== 'undefined') {
+	              document.body.appendChild(scriptLoader);
+	            }
+	          });
+	        }
+	      }, {
+	        key: 'componentDidMount',
+	        value: function componentDidMount() {
+	          this.loadScripts(mapScriptsToProps(this.props));
+	        }
+
+	        /**
+	         * Support again in the next version
+	         */
+
+	        // componentWillReceiveProps (nextProps) {
+	        //   this.setState(getInitialState(nextProps));
+	        // }
+	        //
+	        // componentDidUpdate (nextProps) {
+	        //   const dependencies = mapScriptsToProps(nextProps);
+	        //
+	        //   this.loadScripts(dependencies);
+	        // }
+
+	      }, {
+	        key: 'loadHandler',
+	        value: function loadHandler(name, globalPath) {
+	          var script = getScript(globalPath);
+
+	          if (script !== null) {
+	            this.setState(_defineProperty({}, name, script));
+	          }
+	        }
+	      }, {
+	        key: 'injectScripts',
+	        value: function injectScripts(component) {
+	          return _react2['default'].cloneElement(_react2['default'].createElement(component, this.props), this.state);
+	        }
+	      }, {
+	        key: 'render',
+	        value: function render() {
+	          return this.injectScripts(Component);
+	        }
+	      }]);
+
+	      return AsyncLoaded;
+	    })(_react2['default'].Component);
+
+	    return (0, _hoistNonReactStatics2['default'])(AsyncLoaded, Component);
+	  };
+	};
+
+	exports['default'] = asyncLoad;
+	module.exports = exports['default'];
+
+/***/ },
+/* 667 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
 	});
@@ -71828,7 +72231,7 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	var React = __webpack_require__(2);
-	var IconBase = __webpack_require__(666);
+	var IconBase = __webpack_require__(668);
 
 	var FaSpinner = function (_React$Component) {
 	    _inherits(FaSpinner, _React$Component);
@@ -71861,7 +72264,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 666 */
+/* 668 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -71920,7 +72323,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 667 */
+/* 669 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {"use strict";
@@ -71947,7 +72350,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _reactPropTypesElementOfType = __webpack_require__(668);
+	var _reactPropTypesElementOfType = __webpack_require__(670);
 
 	var _reactPropTypesElementOfType2 = _interopRequireDefault(_reactPropTypesElementOfType);
 
@@ -71961,7 +72364,7 @@
 
 	var _index = __webpack_require__(619);
 
-	var _utilsMakeUrl = __webpack_require__(669);
+	var _utilsMakeUrl = __webpack_require__(671);
 
 	var _utilsMakeUrl2 = _interopRequireDefault(_utilsMakeUrl);
 
@@ -71999,7 +72402,7 @@
 	      /*
 	       * External commonjs require dependency -- begin
 	       */
-	      var scriptjs = __webpack_require__(683);
+	      var scriptjs = __webpack_require__(685);
 	      /*
 	       * External commonjs require dependency -- end
 	       */
@@ -72072,7 +72475,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 668 */
+/* 670 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -72143,7 +72546,7 @@
 	}
 
 /***/ },
-/* 669 */
+/* 671 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -72156,11 +72559,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
-	var _url = __webpack_require__(670);
+	var _url = __webpack_require__(672);
 
 	var _react = __webpack_require__(2);
 
-	var _lodashIsequal = __webpack_require__(675);
+	var _lodashIsequal = __webpack_require__(677);
 
 	var _lodashIsequal2 = _interopRequireDefault(_lodashIsequal);
 
@@ -72193,7 +72596,7 @@
 	}
 
 /***/ },
-/* 670 */
+/* 672 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -72217,7 +72620,7 @@
 	// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 	// USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-	var punycode = __webpack_require__(671);
+	var punycode = __webpack_require__(673);
 
 	exports.parse = urlParse;
 	exports.resolve = urlResolve;
@@ -72289,7 +72692,7 @@
 	      'gopher:': true,
 	      'file:': true
 	    },
-	    querystring = __webpack_require__(672);
+	    querystring = __webpack_require__(674);
 
 	function urlParse(url, parseQueryString, slashesDenoteHost) {
 	  if (url && isObject(url) && url instanceof Url) return url;
@@ -72906,7 +73309,7 @@
 
 
 /***/ },
-/* 671 */
+/* 673 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/* WEBPACK VAR INJECTION */(function(module, global) {/*! https://mths.be/punycode v1.3.2 by @mathias */
@@ -73441,17 +73844,17 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(272)(module), (function() { return this; }())))
 
 /***/ },
-/* 672 */
+/* 674 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	exports.decode = exports.parse = __webpack_require__(673);
-	exports.encode = exports.stringify = __webpack_require__(674);
+	exports.decode = exports.parse = __webpack_require__(675);
+	exports.encode = exports.stringify = __webpack_require__(676);
 
 
 /***/ },
-/* 673 */
+/* 675 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -73537,7 +73940,7 @@
 
 
 /***/ },
-/* 674 */
+/* 676 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -73607,7 +74010,7 @@
 
 
 /***/ },
-/* 675 */
+/* 677 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -73618,8 +74021,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseIsEqual = __webpack_require__(676),
-	    bindCallback = __webpack_require__(682);
+	var baseIsEqual = __webpack_require__(678),
+	    bindCallback = __webpack_require__(684);
 
 	/**
 	 * Performs a deep comparison between two values to determine if they are
@@ -73675,7 +74078,7 @@
 
 
 /***/ },
-/* 676 */
+/* 678 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -73686,9 +74089,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var isArray = __webpack_require__(677),
-	    isTypedArray = __webpack_require__(678),
-	    keys = __webpack_require__(679);
+	var isArray = __webpack_require__(679),
+	    isTypedArray = __webpack_require__(680),
+	    keys = __webpack_require__(681);
 
 	/** `Object#toString` result references. */
 	var argsTag = '[object Arguments]',
@@ -74023,7 +74426,7 @@
 
 
 /***/ },
-/* 677 */
+/* 679 */
 /***/ function(module, exports) {
 
 	/**
@@ -74209,7 +74612,7 @@
 
 
 /***/ },
-/* 678 */
+/* 680 */
 /***/ function(module, exports) {
 
 	/**
@@ -74363,7 +74766,7 @@
 
 
 /***/ },
-/* 679 */
+/* 681 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -74374,9 +74777,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var getNative = __webpack_require__(680),
-	    isArguments = __webpack_require__(681),
-	    isArray = __webpack_require__(677);
+	var getNative = __webpack_require__(682),
+	    isArguments = __webpack_require__(683),
+	    isArray = __webpack_require__(679);
 
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -74605,7 +75008,7 @@
 
 
 /***/ },
-/* 680 */
+/* 682 */
 /***/ function(module, exports) {
 
 	/**
@@ -74748,7 +75151,7 @@
 
 
 /***/ },
-/* 681 */
+/* 683 */
 /***/ function(module, exports) {
 
 	/**
@@ -74983,7 +75386,7 @@
 
 
 /***/ },
-/* 682 */
+/* 684 */
 /***/ function(module, exports) {
 
 	/**
@@ -75054,7 +75457,7 @@
 
 
 /***/ },
-/* 683 */
+/* 685 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -75181,6 +75584,14 @@
 	  return $script
 	});
 
+
+/***/ },
+/* 686 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = 'AIzaSyBi5gLmdXNTcFlB04hUijdJ_3fdEUb8bkA';
 
 /***/ }
 /******/ ]);
