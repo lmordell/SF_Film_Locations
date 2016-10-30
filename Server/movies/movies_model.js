@@ -33,7 +33,7 @@ const getMovieData = (req, res) => {
         return rp(geoCodeOptions)
       }))
         .then(locations => {
-          // console.log('movie locations', locations)
+          console.log('movie locations', locations)
           // Add lat / lng to each film
           films.forEach((film, i) => {
             film.lat = locations[i].results[0].geometry.location.lat

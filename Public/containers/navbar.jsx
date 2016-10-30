@@ -1,9 +1,10 @@
 // libraries
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { AppBar, Drawer, MenuItem, TextField, ListItem } from 'material-ui/'
+import { AppBar, Drawer, MenuItem, ListItem } from 'material-ui/'
 import Autosuggest from 'react-autosuggest'
 import axios from 'axios'
+import _ from 'lodash'
 
 // dispatch
 import { getMovieQueryData } from '../actions/actions_movies'
@@ -56,7 +57,7 @@ class NavBar extends Component {
     }
     //Display error message in sidebar when a movie can't be fetched
     if (status == 404 && !isFetchingData) {
-      return ( <ListItem primaryText='Whoops!' secondaryText='Looks like we couldnt find any information for that film'></ListItem>)
+      return ( <ListItem primaryText='Whoops!' secondaryText='Looks like we couldnt find locations for that film'></ListItem>)
     } 
     //If the user has not clicked on marker, display default information
     if(!activeMovie.title && !isFetchingData) {
@@ -69,7 +70,7 @@ class NavBar extends Component {
 
   onChange (event, { newValue }) {
     this.setState({
-      autocompleteVal: newValue
+      autocompleteVal: _.escape(newValue)
     })
   }
 

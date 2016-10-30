@@ -11,7 +11,7 @@ const filmOptions = [
   },
   {
     letter: 'B',
-    movies: [ { title: 'Basic Instinct' }, { title: 'Blue Jasmine'} ]
+    movies: [ { title: 'Basic Instinct' }, { title: 'Blue Jasmine'}, { title: 'Bicentennial Man'} ]
   },
   {
     letter: 'D',

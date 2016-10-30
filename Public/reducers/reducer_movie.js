@@ -25,11 +25,14 @@ export default function(state = INITIAL_STATE , action) {
       let temp = {}
       //Update state in case data can not be fetched
        if(action.error){
+        console.log('action in error', action.payload)
         temp.status = 404
         temp.movieData = []
         return {...state, ...temp}
       }
       temp.movieData = action.payload.data.films
+      //set the first film returned as the active movie
+      temp.activeMovie = temp.movieData[0]
       temp.status = action.payload.data.status
       return {...state, ...temp}
     }
