@@ -1,0 +1,2439 @@
+exports[`Navbar renders AppBar and open Drawer to the page 1`] = `
+ShallowWrapper {
+  "complexSelector": ComplexSelector {
+    "buildPredicate": [Function],
+    "childrenOfNode": [Function],
+    "findWhereUnwrapped": [Function],
+  },
+  "length": 1,
+  "node": <div>
+    <function AppBar() {
+        var _ref;
+    
+        var _temp, _this, _ret;
+    
+        (0, _classCallCheck3.default)(this, AppBar);
+    
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+    
+        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = AppBar.__proto__ || (0, _getPrototypeOf2.default)(AppBar)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapLeftIconButton = function (event) {
+          if (_this.props.onLeftIconButtonTouchTap) {
+            _this.props.onLeftIconButtonTouchTap(event);
+          }
+        }, _this.handleTouchTapRightIconButton = function (event) {
+          if (_this.props.onRightIconButtonTouchTap) {
+            _this.props.onRightIconButtonTouchTap(event);
+          }
+        }, _this.handleTitleTouchTap = function (event) {
+          if (_this.props.onTitleTouchTap) {
+            _this.props.onTitleTouchTap(event);
+          }
+        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+      }
+        iconClassNameRight="muidocs-icon-navigation-expand-more"
+        onLeftIconButtonTouchTap={[Function]}
+        showMenuIconButton={true}
+        title="San Francisco Film Locations"
+        zDepth={1} />
+    <function Drawer() {
+        var _ref;
+    
+        var _temp, _this, _ret;
+    
+        (0, _classCallCheck3.default)(this, Drawer);
+    
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+    
+        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Drawer.__proto__ || (0, _getPrototypeOf2.default)(Drawer)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapOverlay = function (event) {
+          event.preventDefault();
+          _this.close('clickaway');
+        }, _this.handleKeyUp = function (event) {
+          if (_this.state.open && !_this.props.docked && (0, _keycode2.default)(event) === 'esc') {
+            _this.close('escape');
+          }
+        }, _this.onBodyTouchStart = function (event) {
+          var swipeAreaWidth = _this.props.swipeAreaWidth;
+    
+          var touchStartX = event.touches[0].pageX;
+          var touchStartY = event.touches[0].pageY;
+    
+          // Open only if swiping from far left (or right) while closed
+          if (swipeAreaWidth !== null && !_this.state.open) {
+            if (_this.props.openSecondary) {
+              // If openSecondary is true calculate from the far right
+              if (touchStartX < document.body.offsetWidth - swipeAreaWidth) return;
+            } else {
+              // If openSecondary is false calculate from the far left
+              if (touchStartX > swipeAreaWidth) return;
+            }
+          }
+    
+          if (!_this.state.open && (openNavEventHandler !== _this.onBodyTouchStart || _this.props.disableSwipeToOpen)) {
+            return;
+          }
+    
+          _this.maybeSwiping = true;
+          _this.touchStartX = touchStartX;
+          _this.touchStartY = touchStartY;
+    
+          document.body.addEventListener('touchmove', _this.onBodyTouchMove);
+          document.body.addEventListener('touchend', _this.onBodyTouchEnd);
+          document.body.addEventListener('touchcancel', _this.onBodyTouchEnd);
+        }, _this.onBodyTouchMove = function (event) {
+          var currentX = event.touches[0].pageX;
+          var currentY = event.touches[0].pageY;
+    
+          if (_this.state.swiping) {
+            event.preventDefault();
+            _this.setPosition(_this.getTranslateX(currentX));
+          } else if (_this.maybeSwiping) {
+            var dXAbs = Math.abs(currentX - _this.touchStartX);
+            var dYAbs = Math.abs(currentY - _this.touchStartY);
+            // If the user has moved his thumb ten pixels in either direction,
+            // we can safely make an assumption about whether he was intending
+            // to swipe or scroll.
+            var threshold = 10;
+    
+            if (dXAbs > threshold && dYAbs <= threshold) {
+              _this.swipeStartX = currentX;
+              _this.setState({
+                swiping: _this.state.open ? 'closing' : 'opening'
+              });
+              _this.setPosition(_this.getTranslateX(currentX));
+            } else if (dXAbs <= threshold && dYAbs > threshold) {
+              _this.onBodyTouchEnd();
+            }
+          }
+        }, _this.onBodyTouchEnd = function (event) {
+          if (_this.state.swiping) {
+            var currentX = event.changedTouches[0].pageX;
+            var translateRatio = _this.getTranslateX(currentX) / _this.getMaxTranslateX();
+    
+            _this.maybeSwiping = false;
+            var swiping = _this.state.swiping;
+            _this.setState({
+              swiping: null
+            });
+    
+            // We have to open or close after setting swiping to null,
+            // because only then CSS transition is enabled.
+            if (translateRatio > 0.5) {
+              if (swiping === 'opening') {
+                _this.setPosition(_this.getMaxTranslateX());
+              } else {
+                _this.close('swipe');
+              }
+            } else {
+              if (swiping === 'opening') {
+                _this.open('swipe');
+              } else {
+                _this.setPosition(0);
+              }
+            }
+          } else {
+            _this.maybeSwiping = false;
+          }
+    
+          document.body.removeEventListener('touchmove', _this.onBodyTouchMove);
+          document.body.removeEventListener('touchend', _this.onBodyTouchEnd);
+          document.body.removeEventListener('touchcancel', _this.onBodyTouchEnd);
+        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+      }
+        containerStyle={
+            Object {
+                "top": "64px",
+              }
+        }
+        disableSwipeToOpen={false}
+        docked={true}
+        open={true}
+        openSecondary={false}
+        swipeAreaWidth={30}
+        width={300}
+        zDepth={2}>
+        <function MenuItem() {
+            var _ref;
+        
+            var _temp, _this, _ret;
+        
+            (0, _classCallCheck3.default)(this, MenuItem);
+        
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
+        
+            return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+              open: false
+            }, _this.cloneMenuItem = function (item) {
+              return _react2.default.cloneElement(item, {
+                onTouchTap: function onTouchTap(event) {
+                  if (!item.props.menuItems) {
+                    _this.handleRequestClose();
+                  }
+        
+                  if (item.props.onTouchTap) {
+                    item.props.onTouchTap(event);
+                  }
+                }
+              });
+            }, _this.handleTouchTap = function (event) {
+              event.preventDefault();
+        
+              _this.setState({
+                open: true,
+                anchorEl: _reactDom2.default.findDOMNode(_this)
+              });
+        
+              if (_this.props.onTouchTap) {
+                _this.props.onTouchTap(event);
+              }
+            }, _this.handleRequestClose = function () {
+              _this.setState({
+                open: false,
+                anchorEl: null
+              });
+            }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+          }
+            checked={false}
+            desktop={false}
+            disabled={false}
+            focusState="none"
+            insetChildren={false}>
+            <form
+                onSubmit={[Function]}>
+                <function AutosuggestContainer(_ref) {
+                    var alwaysRenderSuggestions = _ref.alwaysRenderSuggestions;
+                
+                    _classCallCheck(this, AutosuggestContainer);
+                
+                    var _this = _possibleConstructorReturn(this, (AutosuggestContainer.__proto__ || Object.getPrototypeOf(AutosuggestContainer)).call(this));
+                
+                    _this.storeInputReference = function (input) {
+                      _this.input = input;
+                    };
+                
+                    var initialState = {
+                      isFocused: false,
+                      isCollapsed: !alwaysRenderSuggestions,
+                      focusedSectionIndex: null,
+                      focusedSuggestionIndex: null,
+                      valueBeforeUpDown: null
+                    };
+                
+                    _this.store = (0, _redux.createStore)(_redux3.default, initialState);
+                    return _this;
+                  }
+                    alwaysRenderSuggestions={false}
+                    focusFirstSuggestion={false}
+                    focusInputOnSuggestionClick={true}
+                    getSectionSuggestions={[Function]}
+                    getSuggestionValue={[Function]}
+                    id="1"
+                    inputProps={
+                        Object {
+                            "onChange": [Function],
+                            "placeholder": "Search by Film Title",
+                            "value": "",
+                          }
+                    }
+                    multiSection={true}
+                    onSuggestionsClearRequested={[Function]}
+                    onSuggestionsFetchRequested={[Function]}
+                    renderSectionTitle={[Function]}
+                    renderSuggestion={[Function]}
+                    shouldRenderSuggestions={[Function]}
+                    suggestions={Array []}
+                    theme={
+                        Object {
+                            "container": "react-autosuggest__container",
+                            "containerOpen": "react-autosuggest__container--open",
+                            "input": "react-autosuggest__input",
+                            "sectionContainer": "react-autosuggest__section-container",
+                            "sectionTitle": "react-autosuggest__section-title",
+                            "suggestion": "react-autosuggest__suggestion",
+                            "suggestionFocused": "react-autosuggest__suggestion--focused",
+                            "suggestionsContainer": "react-autosuggest__suggestions-container",
+                            "suggestionsList": "react-autosuggest__suggestions-list",
+                          }
+                    } />
+            </form>
+        </function MenuItem() {
+            var _ref;
+        
+            var _temp, _this, _ret;
+        
+            (0, _classCallCheck3.default)(this, MenuItem);
+        
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
+        
+            return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+              open: false
+            }, _this.cloneMenuItem = function (item) {
+              return _react2.default.cloneElement(item, {
+                onTouchTap: function onTouchTap(event) {
+                  if (!item.props.menuItems) {
+                    _this.handleRequestClose();
+                  }
+        
+                  if (item.props.onTouchTap) {
+                    item.props.onTouchTap(event);
+                  }
+                }
+              });
+            }, _this.handleTouchTap = function (event) {
+              event.preventDefault();
+        
+              _this.setState({
+                open: true,
+                anchorEl: _reactDom2.default.findDOMNode(_this)
+              });
+        
+              if (_this.props.onTouchTap) {
+                _this.props.onTouchTap(event);
+              }
+            }, _this.handleRequestClose = function () {
+              _this.setState({
+                open: false,
+                anchorEl: null
+              });
+            }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+          }>
+        <function MenuItem() {
+            var _ref;
+        
+            var _temp, _this, _ret;
+        
+            (0, _classCallCheck3.default)(this, MenuItem);
+        
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
+        
+            return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+              open: false
+            }, _this.cloneMenuItem = function (item) {
+              return _react2.default.cloneElement(item, {
+                onTouchTap: function onTouchTap(event) {
+                  if (!item.props.menuItems) {
+                    _this.handleRequestClose();
+                  }
+        
+                  if (item.props.onTouchTap) {
+                    item.props.onTouchTap(event);
+                  }
+                }
+              });
+            }, _this.handleTouchTap = function (event) {
+              event.preventDefault();
+        
+              _this.setState({
+                open: true,
+                anchorEl: _reactDom2.default.findDOMNode(_this)
+              });
+        
+              if (_this.props.onTouchTap) {
+                _this.props.onTouchTap(event);
+              }
+            }, _this.handleRequestClose = function () {
+              _this.setState({
+                open: false,
+                anchorEl: null
+              });
+            }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+          }
+            checked={false}
+            desktop={false}
+            disabled={false}
+            focusState="none"
+            insetChildren={false}>
+            <function ListItem() {
+                var _ref;
+            
+                var _temp, _this, _ret;
+            
+                (0, _classCallCheck3.default)(this, ListItem);
+            
+                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                  args[_key] = arguments[_key];
+                }
+            
+                return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = ListItem.__proto__ || (0, _getPrototypeOf2.default)(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                  hovered: false,
+                  isKeyboardFocused: false,
+                  open: false,
+                  rightIconButtonHovered: false,
+                  rightIconButtonKeyboardFocused: false,
+                  touch: false
+                }, _this.handleKeyboardFocus = function (event, isKeyboardFocused) {
+                  _this.setState({ isKeyboardFocused: isKeyboardFocused });
+                  _this.props.onKeyboardFocus(event, isKeyboardFocused);
+                }, _this.handleMouseEnter = function (event) {
+                  if (!_this.state.touch) _this.setState({ hovered: true });
+                  _this.props.onMouseEnter(event);
+                }, _this.handleMouseLeave = function (event) {
+                  _this.setState({ hovered: false });
+                  _this.props.onMouseLeave(event);
+                }, _this.handleNestedListToggle = function (event) {
+                  event.stopPropagation();
+                  _this.setState({ open: !_this.state.open }, function () {
+                    _this.props.onNestedListToggle(_this);
+                  });
+                }, _this.handleRightIconButtonKeyboardFocus = function (event, isKeyboardFocused) {
+                  if (isKeyboardFocused) {
+                    _this.setState({
+                      isKeyboardFocused: false,
+                      rightIconButtonKeyboardFocused: isKeyboardFocused
+                    });
+                  }
+            
+                  var iconButton = _this.props.rightIconButton;
+            
+                  if (iconButton && iconButton.props.onKeyboardFocus) iconButton.props.onKeyboardFocus(event, isKeyboardFocused);
+                }, _this.handleRightIconButtonMouseLeave = function (event) {
+                  var iconButton = _this.props.rightIconButton;
+                  _this.setState({ rightIconButtonHovered: false });
+                  if (iconButton && iconButton.props.onMouseLeave) iconButton.props.onMouseLeave(event);
+                }, _this.handleRightIconButtonMouseEnter = function (event) {
+                  var iconButton = _this.props.rightIconButton;
+                  _this.setState({ rightIconButtonHovered: true });
+                  if (iconButton && iconButton.props.onMouseEnter) iconButton.props.onMouseEnter(event);
+                }, _this.handleRightIconButtonMouseUp = function (event) {
+                  var iconButton = _this.props.rightIconButton;
+                  event.stopPropagation();
+                  if (iconButton && iconButton.props.onMouseUp) iconButton.props.onMouseUp(event);
+                }, _this.handleRightIconButtonTouchTap = function (event) {
+                  var iconButton = _this.props.rightIconButton;
+            
+                  // Stop the event from bubbling up to the list-item
+                  event.stopPropagation();
+                  if (iconButton && iconButton.props.onTouchTap) iconButton.props.onTouchTap(event);
+                }, _this.handleTouchStart = function (event) {
+                  _this.setState({ touch: true });
+                  _this.props.onTouchStart(event);
+                }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+              }
+                autoGenerateNestedIndicator={true}
+                disableKeyboardFocus={false}
+                disabled={false}
+                initiallyOpen={false}
+                insetChildren={false}
+                nestedItems={Array []}
+                nestedLevel={0}
+                onKeyboardFocus={[Function]}
+                onMouseEnter={[Function]}
+                onMouseLeave={[Function]}
+                onNestedListToggle={[Function]}
+                onTouchStart={[Function]}
+                open={null}
+                primaryText="Click a marker to get movie details!"
+                primaryTogglesNestedList={false}
+                secondaryText="Or search for locations in SF!"
+                secondaryTextLines={1} />
+        </function MenuItem() {
+            var _ref;
+        
+            var _temp, _this, _ret;
+        
+            (0, _classCallCheck3.default)(this, MenuItem);
+        
+            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+              args[_key] = arguments[_key];
+            }
+        
+            return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+              open: false
+            }, _this.cloneMenuItem = function (item) {
+              return _react2.default.cloneElement(item, {
+                onTouchTap: function onTouchTap(event) {
+                  if (!item.props.menuItems) {
+                    _this.handleRequestClose();
+                  }
+        
+                  if (item.props.onTouchTap) {
+                    item.props.onTouchTap(event);
+                  }
+                }
+              });
+            }, _this.handleTouchTap = function (event) {
+              event.preventDefault();
+        
+              _this.setState({
+                open: true,
+                anchorEl: _reactDom2.default.findDOMNode(_this)
+              });
+        
+              if (_this.props.onTouchTap) {
+                _this.props.onTouchTap(event);
+              }
+            }, _this.handleRequestClose = function () {
+              _this.setState({
+                open: false,
+                anchorEl: null
+              });
+            }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+          }>
+    </function Drawer() {
+        var _ref;
+    
+        var _temp, _this, _ret;
+    
+        (0, _classCallCheck3.default)(this, Drawer);
+    
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+          args[_key] = arguments[_key];
+        }
+    
+        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Drawer.__proto__ || (0, _getPrototypeOf2.default)(Drawer)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapOverlay = function (event) {
+          event.preventDefault();
+          _this.close('clickaway');
+        }, _this.handleKeyUp = function (event) {
+          if (_this.state.open && !_this.props.docked && (0, _keycode2.default)(event) === 'esc') {
+            _this.close('escape');
+          }
+        }, _this.onBodyTouchStart = function (event) {
+          var swipeAreaWidth = _this.props.swipeAreaWidth;
+    
+          var touchStartX = event.touches[0].pageX;
+          var touchStartY = event.touches[0].pageY;
+    
+          // Open only if swiping from far left (or right) while closed
+          if (swipeAreaWidth !== null && !_this.state.open) {
+            if (_this.props.openSecondary) {
+              // If openSecondary is true calculate from the far right
+              if (touchStartX < document.body.offsetWidth - swipeAreaWidth) return;
+            } else {
+              // If openSecondary is false calculate from the far left
+              if (touchStartX > swipeAreaWidth) return;
+            }
+          }
+    
+          if (!_this.state.open && (openNavEventHandler !== _this.onBodyTouchStart || _this.props.disableSwipeToOpen)) {
+            return;
+          }
+    
+          _this.maybeSwiping = true;
+          _this.touchStartX = touchStartX;
+          _this.touchStartY = touchStartY;
+    
+          document.body.addEventListener('touchmove', _this.onBodyTouchMove);
+          document.body.addEventListener('touchend', _this.onBodyTouchEnd);
+          document.body.addEventListener('touchcancel', _this.onBodyTouchEnd);
+        }, _this.onBodyTouchMove = function (event) {
+          var currentX = event.touches[0].pageX;
+          var currentY = event.touches[0].pageY;
+    
+          if (_this.state.swiping) {
+            event.preventDefault();
+            _this.setPosition(_this.getTranslateX(currentX));
+          } else if (_this.maybeSwiping) {
+            var dXAbs = Math.abs(currentX - _this.touchStartX);
+            var dYAbs = Math.abs(currentY - _this.touchStartY);
+            // If the user has moved his thumb ten pixels in either direction,
+            // we can safely make an assumption about whether he was intending
+            // to swipe or scroll.
+            var threshold = 10;
+    
+            if (dXAbs > threshold && dYAbs <= threshold) {
+              _this.swipeStartX = currentX;
+              _this.setState({
+                swiping: _this.state.open ? 'closing' : 'opening'
+              });
+              _this.setPosition(_this.getTranslateX(currentX));
+            } else if (dXAbs <= threshold && dYAbs > threshold) {
+              _this.onBodyTouchEnd();
+            }
+          }
+        }, _this.onBodyTouchEnd = function (event) {
+          if (_this.state.swiping) {
+            var currentX = event.changedTouches[0].pageX;
+            var translateRatio = _this.getTranslateX(currentX) / _this.getMaxTranslateX();
+    
+            _this.maybeSwiping = false;
+            var swiping = _this.state.swiping;
+            _this.setState({
+              swiping: null
+            });
+    
+            // We have to open or close after setting swiping to null,
+            // because only then CSS transition is enabled.
+            if (translateRatio > 0.5) {
+              if (swiping === 'opening') {
+                _this.setPosition(_this.getMaxTranslateX());
+              } else {
+                _this.close('swipe');
+              }
+            } else {
+              if (swiping === 'opening') {
+                _this.open('swipe');
+              } else {
+                _this.setPosition(0);
+              }
+            }
+          } else {
+            _this.maybeSwiping = false;
+          }
+    
+          document.body.removeEventListener('touchmove', _this.onBodyTouchMove);
+          document.body.removeEventListener('touchend', _this.onBodyTouchEnd);
+          document.body.removeEventListener('touchcancel', _this.onBodyTouchEnd);
+        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+      }>
+</div>,
+  "nodes": Array [
+    <div>
+      <function AppBar() {
+          var _ref;
+      
+          var _temp, _this, _ret;
+      
+          (0, _classCallCheck3.default)(this, AppBar);
+      
+          for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+      
+          return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = AppBar.__proto__ || (0, _getPrototypeOf2.default)(AppBar)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapLeftIconButton = function (event) {
+            if (_this.props.onLeftIconButtonTouchTap) {
+              _this.props.onLeftIconButtonTouchTap(event);
+            }
+          }, _this.handleTouchTapRightIconButton = function (event) {
+            if (_this.props.onRightIconButtonTouchTap) {
+              _this.props.onRightIconButtonTouchTap(event);
+            }
+          }, _this.handleTitleTouchTap = function (event) {
+            if (_this.props.onTitleTouchTap) {
+              _this.props.onTitleTouchTap(event);
+            }
+          }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+        }
+            iconClassNameRight="muidocs-icon-navigation-expand-more"
+            onLeftIconButtonTouchTap={[Function]}
+            showMenuIconButton={true}
+            title="San Francisco Film Locations"
+            zDepth={1} />
+      <function Drawer() {
+          var _ref;
+      
+          var _temp, _this, _ret;
+      
+          (0, _classCallCheck3.default)(this, Drawer);
+      
+          for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+      
+          return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Drawer.__proto__ || (0, _getPrototypeOf2.default)(Drawer)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapOverlay = function (event) {
+            event.preventDefault();
+            _this.close('clickaway');
+          }, _this.handleKeyUp = function (event) {
+            if (_this.state.open && !_this.props.docked && (0, _keycode2.default)(event) === 'esc') {
+              _this.close('escape');
+            }
+          }, _this.onBodyTouchStart = function (event) {
+            var swipeAreaWidth = _this.props.swipeAreaWidth;
+      
+            var touchStartX = event.touches[0].pageX;
+            var touchStartY = event.touches[0].pageY;
+      
+            // Open only if swiping from far left (or right) while closed
+            if (swipeAreaWidth !== null && !_this.state.open) {
+              if (_this.props.openSecondary) {
+                // If openSecondary is true calculate from the far right
+                if (touchStartX < document.body.offsetWidth - swipeAreaWidth) return;
+              } else {
+                // If openSecondary is false calculate from the far left
+                if (touchStartX > swipeAreaWidth) return;
+              }
+            }
+      
+            if (!_this.state.open && (openNavEventHandler !== _this.onBodyTouchStart || _this.props.disableSwipeToOpen)) {
+              return;
+            }
+      
+            _this.maybeSwiping = true;
+            _this.touchStartX = touchStartX;
+            _this.touchStartY = touchStartY;
+      
+            document.body.addEventListener('touchmove', _this.onBodyTouchMove);
+            document.body.addEventListener('touchend', _this.onBodyTouchEnd);
+            document.body.addEventListener('touchcancel', _this.onBodyTouchEnd);
+          }, _this.onBodyTouchMove = function (event) {
+            var currentX = event.touches[0].pageX;
+            var currentY = event.touches[0].pageY;
+      
+            if (_this.state.swiping) {
+              event.preventDefault();
+              _this.setPosition(_this.getTranslateX(currentX));
+            } else if (_this.maybeSwiping) {
+              var dXAbs = Math.abs(currentX - _this.touchStartX);
+              var dYAbs = Math.abs(currentY - _this.touchStartY);
+              // If the user has moved his thumb ten pixels in either direction,
+              // we can safely make an assumption about whether he was intending
+              // to swipe or scroll.
+              var threshold = 10;
+      
+              if (dXAbs > threshold && dYAbs <= threshold) {
+                _this.swipeStartX = currentX;
+                _this.setState({
+                  swiping: _this.state.open ? 'closing' : 'opening'
+                });
+                _this.setPosition(_this.getTranslateX(currentX));
+              } else if (dXAbs <= threshold && dYAbs > threshold) {
+                _this.onBodyTouchEnd();
+              }
+            }
+          }, _this.onBodyTouchEnd = function (event) {
+            if (_this.state.swiping) {
+              var currentX = event.changedTouches[0].pageX;
+              var translateRatio = _this.getTranslateX(currentX) / _this.getMaxTranslateX();
+      
+              _this.maybeSwiping = false;
+              var swiping = _this.state.swiping;
+              _this.setState({
+                swiping: null
+              });
+      
+              // We have to open or close after setting swiping to null,
+              // because only then CSS transition is enabled.
+              if (translateRatio > 0.5) {
+                if (swiping === 'opening') {
+                  _this.setPosition(_this.getMaxTranslateX());
+                } else {
+                  _this.close('swipe');
+                }
+              } else {
+                if (swiping === 'opening') {
+                  _this.open('swipe');
+                } else {
+                  _this.setPosition(0);
+                }
+              }
+            } else {
+              _this.maybeSwiping = false;
+            }
+      
+            document.body.removeEventListener('touchmove', _this.onBodyTouchMove);
+            document.body.removeEventListener('touchend', _this.onBodyTouchEnd);
+            document.body.removeEventListener('touchcancel', _this.onBodyTouchEnd);
+          }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+        }
+            containerStyle={
+                  Object {
+                        "top": "64px",
+                      }
+            }
+            disableSwipeToOpen={false}
+            docked={true}
+            open={true}
+            openSecondary={false}
+            swipeAreaWidth={30}
+            width={300}
+            zDepth={2}>
+            <function MenuItem() {
+                var _ref;
+            
+                var _temp, _this, _ret;
+            
+                (0, _classCallCheck3.default)(this, MenuItem);
+            
+                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                  args[_key] = arguments[_key];
+                }
+            
+                return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                  open: false
+                }, _this.cloneMenuItem = function (item) {
+                  return _react2.default.cloneElement(item, {
+                    onTouchTap: function onTouchTap(event) {
+                      if (!item.props.menuItems) {
+                        _this.handleRequestClose();
+                      }
+            
+                      if (item.props.onTouchTap) {
+                        item.props.onTouchTap(event);
+                      }
+                    }
+                  });
+                }, _this.handleTouchTap = function (event) {
+                  event.preventDefault();
+            
+                  _this.setState({
+                    open: true,
+                    anchorEl: _reactDom2.default.findDOMNode(_this)
+                  });
+            
+                  if (_this.props.onTouchTap) {
+                    _this.props.onTouchTap(event);
+                  }
+                }, _this.handleRequestClose = function () {
+                  _this.setState({
+                    open: false,
+                    anchorEl: null
+                  });
+                }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+              }
+                  checked={false}
+                  desktop={false}
+                  disabled={false}
+                  focusState="none"
+                  insetChildren={false}>
+                  <form
+                        onSubmit={[Function]}>
+                        <function AutosuggestContainer(_ref) {
+                            var alwaysRenderSuggestions = _ref.alwaysRenderSuggestions;
+                        
+                            _classCallCheck(this, AutosuggestContainer);
+                        
+                            var _this = _possibleConstructorReturn(this, (AutosuggestContainer.__proto__ || Object.getPrototypeOf(AutosuggestContainer)).call(this));
+                        
+                            _this.storeInputReference = function (input) {
+                              _this.input = input;
+                            };
+                        
+                            var initialState = {
+                              isFocused: false,
+                              isCollapsed: !alwaysRenderSuggestions,
+                              focusedSectionIndex: null,
+                              focusedSuggestionIndex: null,
+                              valueBeforeUpDown: null
+                            };
+                        
+                            _this.store = (0, _redux.createStore)(_redux3.default, initialState);
+                            return _this;
+                          }
+                              alwaysRenderSuggestions={false}
+                              focusFirstSuggestion={false}
+                              focusInputOnSuggestionClick={true}
+                              getSectionSuggestions={[Function]}
+                              getSuggestionValue={[Function]}
+                              id="1"
+                              inputProps={
+                                    Object {
+                                          "onChange": [Function],
+                                          "placeholder": "Search by Film Title",
+                                          "value": "",
+                                        }
+                              }
+                              multiSection={true}
+                              onSuggestionsClearRequested={[Function]}
+                              onSuggestionsFetchRequested={[Function]}
+                              renderSectionTitle={[Function]}
+                              renderSuggestion={[Function]}
+                              shouldRenderSuggestions={[Function]}
+                              suggestions={Array []}
+                              theme={
+                                    Object {
+                                          "container": "react-autosuggest__container",
+                                          "containerOpen": "react-autosuggest__container--open",
+                                          "input": "react-autosuggest__input",
+                                          "sectionContainer": "react-autosuggest__section-container",
+                                          "sectionTitle": "react-autosuggest__section-title",
+                                          "suggestion": "react-autosuggest__suggestion",
+                                          "suggestionFocused": "react-autosuggest__suggestion--focused",
+                                          "suggestionsContainer": "react-autosuggest__suggestions-container",
+                                          "suggestionsList": "react-autosuggest__suggestions-list",
+                                        }
+                              } />
+                  </form>
+            </function MenuItem() {
+                var _ref;
+            
+                var _temp, _this, _ret;
+            
+                (0, _classCallCheck3.default)(this, MenuItem);
+            
+                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                  args[_key] = arguments[_key];
+                }
+            
+                return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                  open: false
+                }, _this.cloneMenuItem = function (item) {
+                  return _react2.default.cloneElement(item, {
+                    onTouchTap: function onTouchTap(event) {
+                      if (!item.props.menuItems) {
+                        _this.handleRequestClose();
+                      }
+            
+                      if (item.props.onTouchTap) {
+                        item.props.onTouchTap(event);
+                      }
+                    }
+                  });
+                }, _this.handleTouchTap = function (event) {
+                  event.preventDefault();
+            
+                  _this.setState({
+                    open: true,
+                    anchorEl: _reactDom2.default.findDOMNode(_this)
+                  });
+            
+                  if (_this.props.onTouchTap) {
+                    _this.props.onTouchTap(event);
+                  }
+                }, _this.handleRequestClose = function () {
+                  _this.setState({
+                    open: false,
+                    anchorEl: null
+                  });
+                }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+              }>
+            <function MenuItem() {
+                var _ref;
+            
+                var _temp, _this, _ret;
+            
+                (0, _classCallCheck3.default)(this, MenuItem);
+            
+                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                  args[_key] = arguments[_key];
+                }
+            
+                return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                  open: false
+                }, _this.cloneMenuItem = function (item) {
+                  return _react2.default.cloneElement(item, {
+                    onTouchTap: function onTouchTap(event) {
+                      if (!item.props.menuItems) {
+                        _this.handleRequestClose();
+                      }
+            
+                      if (item.props.onTouchTap) {
+                        item.props.onTouchTap(event);
+                      }
+                    }
+                  });
+                }, _this.handleTouchTap = function (event) {
+                  event.preventDefault();
+            
+                  _this.setState({
+                    open: true,
+                    anchorEl: _reactDom2.default.findDOMNode(_this)
+                  });
+            
+                  if (_this.props.onTouchTap) {
+                    _this.props.onTouchTap(event);
+                  }
+                }, _this.handleRequestClose = function () {
+                  _this.setState({
+                    open: false,
+                    anchorEl: null
+                  });
+                }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+              }
+                  checked={false}
+                  desktop={false}
+                  disabled={false}
+                  focusState="none"
+                  insetChildren={false}>
+                  <function ListItem() {
+                      var _ref;
+                  
+                      var _temp, _this, _ret;
+                  
+                      (0, _classCallCheck3.default)(this, ListItem);
+                  
+                      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                        args[_key] = arguments[_key];
+                      }
+                  
+                      return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = ListItem.__proto__ || (0, _getPrototypeOf2.default)(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                        hovered: false,
+                        isKeyboardFocused: false,
+                        open: false,
+                        rightIconButtonHovered: false,
+                        rightIconButtonKeyboardFocused: false,
+                        touch: false
+                      }, _this.handleKeyboardFocus = function (event, isKeyboardFocused) {
+                        _this.setState({ isKeyboardFocused: isKeyboardFocused });
+                        _this.props.onKeyboardFocus(event, isKeyboardFocused);
+                      }, _this.handleMouseEnter = function (event) {
+                        if (!_this.state.touch) _this.setState({ hovered: true });
+                        _this.props.onMouseEnter(event);
+                      }, _this.handleMouseLeave = function (event) {
+                        _this.setState({ hovered: false });
+                        _this.props.onMouseLeave(event);
+                      }, _this.handleNestedListToggle = function (event) {
+                        event.stopPropagation();
+                        _this.setState({ open: !_this.state.open }, function () {
+                          _this.props.onNestedListToggle(_this);
+                        });
+                      }, _this.handleRightIconButtonKeyboardFocus = function (event, isKeyboardFocused) {
+                        if (isKeyboardFocused) {
+                          _this.setState({
+                            isKeyboardFocused: false,
+                            rightIconButtonKeyboardFocused: isKeyboardFocused
+                          });
+                        }
+                  
+                        var iconButton = _this.props.rightIconButton;
+                  
+                        if (iconButton && iconButton.props.onKeyboardFocus) iconButton.props.onKeyboardFocus(event, isKeyboardFocused);
+                      }, _this.handleRightIconButtonMouseLeave = function (event) {
+                        var iconButton = _this.props.rightIconButton;
+                        _this.setState({ rightIconButtonHovered: false });
+                        if (iconButton && iconButton.props.onMouseLeave) iconButton.props.onMouseLeave(event);
+                      }, _this.handleRightIconButtonMouseEnter = function (event) {
+                        var iconButton = _this.props.rightIconButton;
+                        _this.setState({ rightIconButtonHovered: true });
+                        if (iconButton && iconButton.props.onMouseEnter) iconButton.props.onMouseEnter(event);
+                      }, _this.handleRightIconButtonMouseUp = function (event) {
+                        var iconButton = _this.props.rightIconButton;
+                        event.stopPropagation();
+                        if (iconButton && iconButton.props.onMouseUp) iconButton.props.onMouseUp(event);
+                      }, _this.handleRightIconButtonTouchTap = function (event) {
+                        var iconButton = _this.props.rightIconButton;
+                  
+                        // Stop the event from bubbling up to the list-item
+                        event.stopPropagation();
+                        if (iconButton && iconButton.props.onTouchTap) iconButton.props.onTouchTap(event);
+                      }, _this.handleTouchStart = function (event) {
+                        _this.setState({ touch: true });
+                        _this.props.onTouchStart(event);
+                      }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                    }
+                        autoGenerateNestedIndicator={true}
+                        disableKeyboardFocus={false}
+                        disabled={false}
+                        initiallyOpen={false}
+                        insetChildren={false}
+                        nestedItems={Array []}
+                        nestedLevel={0}
+                        onKeyboardFocus={[Function]}
+                        onMouseEnter={[Function]}
+                        onMouseLeave={[Function]}
+                        onNestedListToggle={[Function]}
+                        onTouchStart={[Function]}
+                        open={null}
+                        primaryText="Click a marker to get movie details!"
+                        primaryTogglesNestedList={false}
+                        secondaryText="Or search for locations in SF!"
+                        secondaryTextLines={1} />
+            </function MenuItem() {
+                var _ref;
+            
+                var _temp, _this, _ret;
+            
+                (0, _classCallCheck3.default)(this, MenuItem);
+            
+                for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                  args[_key] = arguments[_key];
+                }
+            
+                return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                  open: false
+                }, _this.cloneMenuItem = function (item) {
+                  return _react2.default.cloneElement(item, {
+                    onTouchTap: function onTouchTap(event) {
+                      if (!item.props.menuItems) {
+                        _this.handleRequestClose();
+                      }
+            
+                      if (item.props.onTouchTap) {
+                        item.props.onTouchTap(event);
+                      }
+                    }
+                  });
+                }, _this.handleTouchTap = function (event) {
+                  event.preventDefault();
+            
+                  _this.setState({
+                    open: true,
+                    anchorEl: _reactDom2.default.findDOMNode(_this)
+                  });
+            
+                  if (_this.props.onTouchTap) {
+                    _this.props.onTouchTap(event);
+                  }
+                }, _this.handleRequestClose = function () {
+                  _this.setState({
+                    open: false,
+                    anchorEl: null
+                  });
+                }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+              }>
+      </function Drawer() {
+          var _ref;
+      
+          var _temp, _this, _ret;
+      
+          (0, _classCallCheck3.default)(this, Drawer);
+      
+          for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+          }
+      
+          return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Drawer.__proto__ || (0, _getPrototypeOf2.default)(Drawer)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapOverlay = function (event) {
+            event.preventDefault();
+            _this.close('clickaway');
+          }, _this.handleKeyUp = function (event) {
+            if (_this.state.open && !_this.props.docked && (0, _keycode2.default)(event) === 'esc') {
+              _this.close('escape');
+            }
+          }, _this.onBodyTouchStart = function (event) {
+            var swipeAreaWidth = _this.props.swipeAreaWidth;
+      
+            var touchStartX = event.touches[0].pageX;
+            var touchStartY = event.touches[0].pageY;
+      
+            // Open only if swiping from far left (or right) while closed
+            if (swipeAreaWidth !== null && !_this.state.open) {
+              if (_this.props.openSecondary) {
+                // If openSecondary is true calculate from the far right
+                if (touchStartX < document.body.offsetWidth - swipeAreaWidth) return;
+              } else {
+                // If openSecondary is false calculate from the far left
+                if (touchStartX > swipeAreaWidth) return;
+              }
+            }
+      
+            if (!_this.state.open && (openNavEventHandler !== _this.onBodyTouchStart || _this.props.disableSwipeToOpen)) {
+              return;
+            }
+      
+            _this.maybeSwiping = true;
+            _this.touchStartX = touchStartX;
+            _this.touchStartY = touchStartY;
+      
+            document.body.addEventListener('touchmove', _this.onBodyTouchMove);
+            document.body.addEventListener('touchend', _this.onBodyTouchEnd);
+            document.body.addEventListener('touchcancel', _this.onBodyTouchEnd);
+          }, _this.onBodyTouchMove = function (event) {
+            var currentX = event.touches[0].pageX;
+            var currentY = event.touches[0].pageY;
+      
+            if (_this.state.swiping) {
+              event.preventDefault();
+              _this.setPosition(_this.getTranslateX(currentX));
+            } else if (_this.maybeSwiping) {
+              var dXAbs = Math.abs(currentX - _this.touchStartX);
+              var dYAbs = Math.abs(currentY - _this.touchStartY);
+              // If the user has moved his thumb ten pixels in either direction,
+              // we can safely make an assumption about whether he was intending
+              // to swipe or scroll.
+              var threshold = 10;
+      
+              if (dXAbs > threshold && dYAbs <= threshold) {
+                _this.swipeStartX = currentX;
+                _this.setState({
+                  swiping: _this.state.open ? 'closing' : 'opening'
+                });
+                _this.setPosition(_this.getTranslateX(currentX));
+              } else if (dXAbs <= threshold && dYAbs > threshold) {
+                _this.onBodyTouchEnd();
+              }
+            }
+          }, _this.onBodyTouchEnd = function (event) {
+            if (_this.state.swiping) {
+              var currentX = event.changedTouches[0].pageX;
+              var translateRatio = _this.getTranslateX(currentX) / _this.getMaxTranslateX();
+      
+              _this.maybeSwiping = false;
+              var swiping = _this.state.swiping;
+              _this.setState({
+                swiping: null
+              });
+      
+              // We have to open or close after setting swiping to null,
+              // because only then CSS transition is enabled.
+              if (translateRatio > 0.5) {
+                if (swiping === 'opening') {
+                  _this.setPosition(_this.getMaxTranslateX());
+                } else {
+                  _this.close('swipe');
+                }
+              } else {
+                if (swiping === 'opening') {
+                  _this.open('swipe');
+                } else {
+                  _this.setPosition(0);
+                }
+              }
+            } else {
+              _this.maybeSwiping = false;
+            }
+      
+            document.body.removeEventListener('touchmove', _this.onBodyTouchMove);
+            document.body.removeEventListener('touchend', _this.onBodyTouchEnd);
+            document.body.removeEventListener('touchcancel', _this.onBodyTouchEnd);
+          }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+        }>
+</div>,
+  ],
+  "options": Object {},
+  "renderer": ReactShallowRenderer {
+    "_instance": ShallowComponentWrapper {
+      "_calledComponentWillUnmount": false,
+      "_compositeType": 0,
+      "_context": Object {},
+      "_currentElement": <function NavBar(props) {/* istanbul ignore next */_classCallCheck(this, NavBar);var _this = _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).call(this, props));
+
+    /* istanbul ignore next */_this.state = {
+      open: true,
+      autocompleteVal: '',
+      autocompleteSuggestions: [],
+      isFetchingData: false };
+
+
+    /* istanbul ignore next */_this.handleOpenSideBar = /* istanbul ignore next */_this.handleOpenSideBar.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.renderMovieDetails = /* istanbul ignore next */_this.renderMovieDetails.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.handleSubmit = /* istanbul ignore next */_this.handleSubmit.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.onChange = /* istanbul ignore next */_this.onChange.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.onSuggestionsFetchRequested = /* istanbul ignore next */_this.onSuggestionsFetchRequested.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.onSuggestionsClearRequested = /* istanbul ignore next */_this.onSuggestionsClearRequested.bind( /* istanbul ignore next */_this); /* istanbul ignore next */return _this;
+  }
+        getMovieQueryData={[Function]}
+        movies={
+                Object {
+                        "activeMovie": Object {},
+                        "movieData": Array [],
+                        "status": null,
+                      }
+        } />,
+      "_debugID": 1,
+      "_hostContainerInfo": null,
+      "_hostParent": null,
+      "_instance": NavBar {
+        "_reactInternalInstance": [Circular],
+        "context": Object {},
+        "handleOpenSideBar": [Function],
+        "handleSubmit": [Function],
+        "onChange": [Function],
+        "onSuggestionsClearRequested": [Function],
+        "onSuggestionsFetchRequested": [Function],
+        "props": Object {
+          "getMovieQueryData": [Function],
+          "movies": Object {
+            "activeMovie": Object {},
+            "movieData": Array [],
+            "status": null,
+          },
+        },
+        "refs": Object {},
+        "renderMovieDetails": [Function],
+        "state": Object {
+          "autocompleteSuggestions": Array [],
+          "autocompleteVal": "",
+          "isFetchingData": false,
+          "open": true,
+        },
+        "updater": Object {
+          "enqueueCallback": [Function],
+          "enqueueCallbackInternal": [Function],
+          "enqueueElementInternal": [Function],
+          "enqueueForceUpdate": [Function],
+          "enqueueReplaceState": [Function],
+          "enqueueSetState": [Function],
+          "isMounted": [Function],
+          "validateCallback": [Function],
+        },
+      },
+      "_mountOrder": 1,
+      "_pendingCallbacks": null,
+      "_pendingElement": null,
+      "_pendingForceUpdate": false,
+      "_pendingReplaceState": false,
+      "_pendingStateQueue": null,
+      "_renderedComponent": Object {
+        "_currentElement": <div>
+          <function AppBar() {
+              var _ref;
+          
+              var _temp, _this, _ret;
+          
+              (0, _classCallCheck3.default)(this, AppBar);
+          
+              for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+              }
+          
+              return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = AppBar.__proto__ || (0, _getPrototypeOf2.default)(AppBar)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapLeftIconButton = function (event) {
+                if (_this.props.onLeftIconButtonTouchTap) {
+                  _this.props.onLeftIconButtonTouchTap(event);
+                }
+              }, _this.handleTouchTapRightIconButton = function (event) {
+                if (_this.props.onRightIconButtonTouchTap) {
+                  _this.props.onRightIconButtonTouchTap(event);
+                }
+              }, _this.handleTitleTouchTap = function (event) {
+                if (_this.props.onTitleTouchTap) {
+                  _this.props.onTitleTouchTap(event);
+                }
+              }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+            }
+                    iconClassNameRight="muidocs-icon-navigation-expand-more"
+                    onLeftIconButtonTouchTap={[Function]}
+                    showMenuIconButton={true}
+                    title="San Francisco Film Locations"
+                    zDepth={1} />
+          <function Drawer() {
+              var _ref;
+          
+              var _temp, _this, _ret;
+          
+              (0, _classCallCheck3.default)(this, Drawer);
+          
+              for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+              }
+          
+              return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Drawer.__proto__ || (0, _getPrototypeOf2.default)(Drawer)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapOverlay = function (event) {
+                event.preventDefault();
+                _this.close('clickaway');
+              }, _this.handleKeyUp = function (event) {
+                if (_this.state.open && !_this.props.docked && (0, _keycode2.default)(event) === 'esc') {
+                  _this.close('escape');
+                }
+              }, _this.onBodyTouchStart = function (event) {
+                var swipeAreaWidth = _this.props.swipeAreaWidth;
+          
+                var touchStartX = event.touches[0].pageX;
+                var touchStartY = event.touches[0].pageY;
+          
+                // Open only if swiping from far left (or right) while closed
+                if (swipeAreaWidth !== null && !_this.state.open) {
+                  if (_this.props.openSecondary) {
+                    // If openSecondary is true calculate from the far right
+                    if (touchStartX < document.body.offsetWidth - swipeAreaWidth) return;
+                  } else {
+                    // If openSecondary is false calculate from the far left
+                    if (touchStartX > swipeAreaWidth) return;
+                  }
+                }
+          
+                if (!_this.state.open && (openNavEventHandler !== _this.onBodyTouchStart || _this.props.disableSwipeToOpen)) {
+                  return;
+                }
+          
+                _this.maybeSwiping = true;
+                _this.touchStartX = touchStartX;
+                _this.touchStartY = touchStartY;
+          
+                document.body.addEventListener('touchmove', _this.onBodyTouchMove);
+                document.body.addEventListener('touchend', _this.onBodyTouchEnd);
+                document.body.addEventListener('touchcancel', _this.onBodyTouchEnd);
+              }, _this.onBodyTouchMove = function (event) {
+                var currentX = event.touches[0].pageX;
+                var currentY = event.touches[0].pageY;
+          
+                if (_this.state.swiping) {
+                  event.preventDefault();
+                  _this.setPosition(_this.getTranslateX(currentX));
+                } else if (_this.maybeSwiping) {
+                  var dXAbs = Math.abs(currentX - _this.touchStartX);
+                  var dYAbs = Math.abs(currentY - _this.touchStartY);
+                  // If the user has moved his thumb ten pixels in either direction,
+                  // we can safely make an assumption about whether he was intending
+                  // to swipe or scroll.
+                  var threshold = 10;
+          
+                  if (dXAbs > threshold && dYAbs <= threshold) {
+                    _this.swipeStartX = currentX;
+                    _this.setState({
+                      swiping: _this.state.open ? 'closing' : 'opening'
+                    });
+                    _this.setPosition(_this.getTranslateX(currentX));
+                  } else if (dXAbs <= threshold && dYAbs > threshold) {
+                    _this.onBodyTouchEnd();
+                  }
+                }
+              }, _this.onBodyTouchEnd = function (event) {
+                if (_this.state.swiping) {
+                  var currentX = event.changedTouches[0].pageX;
+                  var translateRatio = _this.getTranslateX(currentX) / _this.getMaxTranslateX();
+          
+                  _this.maybeSwiping = false;
+                  var swiping = _this.state.swiping;
+                  _this.setState({
+                    swiping: null
+                  });
+          
+                  // We have to open or close after setting swiping to null,
+                  // because only then CSS transition is enabled.
+                  if (translateRatio > 0.5) {
+                    if (swiping === 'opening') {
+                      _this.setPosition(_this.getMaxTranslateX());
+                    } else {
+                      _this.close('swipe');
+                    }
+                  } else {
+                    if (swiping === 'opening') {
+                      _this.open('swipe');
+                    } else {
+                      _this.setPosition(0);
+                    }
+                  }
+                } else {
+                  _this.maybeSwiping = false;
+                }
+          
+                document.body.removeEventListener('touchmove', _this.onBodyTouchMove);
+                document.body.removeEventListener('touchend', _this.onBodyTouchEnd);
+                document.body.removeEventListener('touchcancel', _this.onBodyTouchEnd);
+              }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+            }
+                    containerStyle={
+                              Object {
+                                        "top": "64px",
+                                      }
+                    }
+                    disableSwipeToOpen={false}
+                    docked={true}
+                    open={true}
+                    openSecondary={false}
+                    swipeAreaWidth={30}
+                    width={300}
+                    zDepth={2}>
+                    <function MenuItem() {
+                        var _ref;
+                    
+                        var _temp, _this, _ret;
+                    
+                        (0, _classCallCheck3.default)(this, MenuItem);
+                    
+                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                          args[_key] = arguments[_key];
+                        }
+                    
+                        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                          open: false
+                        }, _this.cloneMenuItem = function (item) {
+                          return _react2.default.cloneElement(item, {
+                            onTouchTap: function onTouchTap(event) {
+                              if (!item.props.menuItems) {
+                                _this.handleRequestClose();
+                              }
+                    
+                              if (item.props.onTouchTap) {
+                                item.props.onTouchTap(event);
+                              }
+                            }
+                          });
+                        }, _this.handleTouchTap = function (event) {
+                          event.preventDefault();
+                    
+                          _this.setState({
+                            open: true,
+                            anchorEl: _reactDom2.default.findDOMNode(_this)
+                          });
+                    
+                          if (_this.props.onTouchTap) {
+                            _this.props.onTouchTap(event);
+                          }
+                        }, _this.handleRequestClose = function () {
+                          _this.setState({
+                            open: false,
+                            anchorEl: null
+                          });
+                        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                      }
+                              checked={false}
+                              desktop={false}
+                              disabled={false}
+                              focusState="none"
+                              insetChildren={false}>
+                              <form
+                                        onSubmit={[Function]}>
+                                        <function AutosuggestContainer(_ref) {
+                                            var alwaysRenderSuggestions = _ref.alwaysRenderSuggestions;
+                                        
+                                            _classCallCheck(this, AutosuggestContainer);
+                                        
+                                            var _this = _possibleConstructorReturn(this, (AutosuggestContainer.__proto__ || Object.getPrototypeOf(AutosuggestContainer)).call(this));
+                                        
+                                            _this.storeInputReference = function (input) {
+                                              _this.input = input;
+                                            };
+                                        
+                                            var initialState = {
+                                              isFocused: false,
+                                              isCollapsed: !alwaysRenderSuggestions,
+                                              focusedSectionIndex: null,
+                                              focusedSuggestionIndex: null,
+                                              valueBeforeUpDown: null
+                                            };
+                                        
+                                            _this.store = (0, _redux.createStore)(_redux3.default, initialState);
+                                            return _this;
+                                          }
+                                                  alwaysRenderSuggestions={false}
+                                                  focusFirstSuggestion={false}
+                                                  focusInputOnSuggestionClick={true}
+                                                  getSectionSuggestions={[Function]}
+                                                  getSuggestionValue={[Function]}
+                                                  id="1"
+                                                  inputProps={
+                                                            Object {
+                                                                      "onChange": [Function],
+                                                                      "placeholder": "Search by Film Title",
+                                                                      "value": "",
+                                                                    }
+                                                  }
+                                                  multiSection={true}
+                                                  onSuggestionsClearRequested={[Function]}
+                                                  onSuggestionsFetchRequested={[Function]}
+                                                  renderSectionTitle={[Function]}
+                                                  renderSuggestion={[Function]}
+                                                  shouldRenderSuggestions={[Function]}
+                                                  suggestions={Array []}
+                                                  theme={
+                                                            Object {
+                                                                      "container": "react-autosuggest__container",
+                                                                      "containerOpen": "react-autosuggest__container--open",
+                                                                      "input": "react-autosuggest__input",
+                                                                      "sectionContainer": "react-autosuggest__section-container",
+                                                                      "sectionTitle": "react-autosuggest__section-title",
+                                                                      "suggestion": "react-autosuggest__suggestion",
+                                                                      "suggestionFocused": "react-autosuggest__suggestion--focused",
+                                                                      "suggestionsContainer": "react-autosuggest__suggestions-container",
+                                                                      "suggestionsList": "react-autosuggest__suggestions-list",
+                                                                    }
+                                                  } />
+                              </form>
+                    </function MenuItem() {
+                        var _ref;
+                    
+                        var _temp, _this, _ret;
+                    
+                        (0, _classCallCheck3.default)(this, MenuItem);
+                    
+                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                          args[_key] = arguments[_key];
+                        }
+                    
+                        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                          open: false
+                        }, _this.cloneMenuItem = function (item) {
+                          return _react2.default.cloneElement(item, {
+                            onTouchTap: function onTouchTap(event) {
+                              if (!item.props.menuItems) {
+                                _this.handleRequestClose();
+                              }
+                    
+                              if (item.props.onTouchTap) {
+                                item.props.onTouchTap(event);
+                              }
+                            }
+                          });
+                        }, _this.handleTouchTap = function (event) {
+                          event.preventDefault();
+                    
+                          _this.setState({
+                            open: true,
+                            anchorEl: _reactDom2.default.findDOMNode(_this)
+                          });
+                    
+                          if (_this.props.onTouchTap) {
+                            _this.props.onTouchTap(event);
+                          }
+                        }, _this.handleRequestClose = function () {
+                          _this.setState({
+                            open: false,
+                            anchorEl: null
+                          });
+                        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                      }>
+                    <function MenuItem() {
+                        var _ref;
+                    
+                        var _temp, _this, _ret;
+                    
+                        (0, _classCallCheck3.default)(this, MenuItem);
+                    
+                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                          args[_key] = arguments[_key];
+                        }
+                    
+                        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                          open: false
+                        }, _this.cloneMenuItem = function (item) {
+                          return _react2.default.cloneElement(item, {
+                            onTouchTap: function onTouchTap(event) {
+                              if (!item.props.menuItems) {
+                                _this.handleRequestClose();
+                              }
+                    
+                              if (item.props.onTouchTap) {
+                                item.props.onTouchTap(event);
+                              }
+                            }
+                          });
+                        }, _this.handleTouchTap = function (event) {
+                          event.preventDefault();
+                    
+                          _this.setState({
+                            open: true,
+                            anchorEl: _reactDom2.default.findDOMNode(_this)
+                          });
+                    
+                          if (_this.props.onTouchTap) {
+                            _this.props.onTouchTap(event);
+                          }
+                        }, _this.handleRequestClose = function () {
+                          _this.setState({
+                            open: false,
+                            anchorEl: null
+                          });
+                        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                      }
+                              checked={false}
+                              desktop={false}
+                              disabled={false}
+                              focusState="none"
+                              insetChildren={false}>
+                              <function ListItem() {
+                                  var _ref;
+                              
+                                  var _temp, _this, _ret;
+                              
+                                  (0, _classCallCheck3.default)(this, ListItem);
+                              
+                                  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                                    args[_key] = arguments[_key];
+                                  }
+                              
+                                  return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = ListItem.__proto__ || (0, _getPrototypeOf2.default)(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                                    hovered: false,
+                                    isKeyboardFocused: false,
+                                    open: false,
+                                    rightIconButtonHovered: false,
+                                    rightIconButtonKeyboardFocused: false,
+                                    touch: false
+                                  }, _this.handleKeyboardFocus = function (event, isKeyboardFocused) {
+                                    _this.setState({ isKeyboardFocused: isKeyboardFocused });
+                                    _this.props.onKeyboardFocus(event, isKeyboardFocused);
+                                  }, _this.handleMouseEnter = function (event) {
+                                    if (!_this.state.touch) _this.setState({ hovered: true });
+                                    _this.props.onMouseEnter(event);
+                                  }, _this.handleMouseLeave = function (event) {
+                                    _this.setState({ hovered: false });
+                                    _this.props.onMouseLeave(event);
+                                  }, _this.handleNestedListToggle = function (event) {
+                                    event.stopPropagation();
+                                    _this.setState({ open: !_this.state.open }, function () {
+                                      _this.props.onNestedListToggle(_this);
+                                    });
+                                  }, _this.handleRightIconButtonKeyboardFocus = function (event, isKeyboardFocused) {
+                                    if (isKeyboardFocused) {
+                                      _this.setState({
+                                        isKeyboardFocused: false,
+                                        rightIconButtonKeyboardFocused: isKeyboardFocused
+                                      });
+                                    }
+                              
+                                    var iconButton = _this.props.rightIconButton;
+                              
+                                    if (iconButton && iconButton.props.onKeyboardFocus) iconButton.props.onKeyboardFocus(event, isKeyboardFocused);
+                                  }, _this.handleRightIconButtonMouseLeave = function (event) {
+                                    var iconButton = _this.props.rightIconButton;
+                                    _this.setState({ rightIconButtonHovered: false });
+                                    if (iconButton && iconButton.props.onMouseLeave) iconButton.props.onMouseLeave(event);
+                                  }, _this.handleRightIconButtonMouseEnter = function (event) {
+                                    var iconButton = _this.props.rightIconButton;
+                                    _this.setState({ rightIconButtonHovered: true });
+                                    if (iconButton && iconButton.props.onMouseEnter) iconButton.props.onMouseEnter(event);
+                                  }, _this.handleRightIconButtonMouseUp = function (event) {
+                                    var iconButton = _this.props.rightIconButton;
+                                    event.stopPropagation();
+                                    if (iconButton && iconButton.props.onMouseUp) iconButton.props.onMouseUp(event);
+                                  }, _this.handleRightIconButtonTouchTap = function (event) {
+                                    var iconButton = _this.props.rightIconButton;
+                              
+                                    // Stop the event from bubbling up to the list-item
+                                    event.stopPropagation();
+                                    if (iconButton && iconButton.props.onTouchTap) iconButton.props.onTouchTap(event);
+                                  }, _this.handleTouchStart = function (event) {
+                                    _this.setState({ touch: true });
+                                    _this.props.onTouchStart(event);
+                                  }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                                }
+                                        autoGenerateNestedIndicator={true}
+                                        disableKeyboardFocus={false}
+                                        disabled={false}
+                                        initiallyOpen={false}
+                                        insetChildren={false}
+                                        nestedItems={Array []}
+                                        nestedLevel={0}
+                                        onKeyboardFocus={[Function]}
+                                        onMouseEnter={[Function]}
+                                        onMouseLeave={[Function]}
+                                        onNestedListToggle={[Function]}
+                                        onTouchStart={[Function]}
+                                        open={null}
+                                        primaryText="Click a marker to get movie details!"
+                                        primaryTogglesNestedList={false}
+                                        secondaryText="Or search for locations in SF!"
+                                        secondaryTextLines={1} />
+                    </function MenuItem() {
+                        var _ref;
+                    
+                        var _temp, _this, _ret;
+                    
+                        (0, _classCallCheck3.default)(this, MenuItem);
+                    
+                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                          args[_key] = arguments[_key];
+                        }
+                    
+                        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                          open: false
+                        }, _this.cloneMenuItem = function (item) {
+                          return _react2.default.cloneElement(item, {
+                            onTouchTap: function onTouchTap(event) {
+                              if (!item.props.menuItems) {
+                                _this.handleRequestClose();
+                              }
+                    
+                              if (item.props.onTouchTap) {
+                                item.props.onTouchTap(event);
+                              }
+                            }
+                          });
+                        }, _this.handleTouchTap = function (event) {
+                          event.preventDefault();
+                    
+                          _this.setState({
+                            open: true,
+                            anchorEl: _reactDom2.default.findDOMNode(_this)
+                          });
+                    
+                          if (_this.props.onTouchTap) {
+                            _this.props.onTouchTap(event);
+                          }
+                        }, _this.handleRequestClose = function () {
+                          _this.setState({
+                            open: false,
+                            anchorEl: null
+                          });
+                        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                      }>
+          </function Drawer() {
+              var _ref;
+          
+              var _temp, _this, _ret;
+          
+              (0, _classCallCheck3.default)(this, Drawer);
+          
+              for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+              }
+          
+              return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Drawer.__proto__ || (0, _getPrototypeOf2.default)(Drawer)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapOverlay = function (event) {
+                event.preventDefault();
+                _this.close('clickaway');
+              }, _this.handleKeyUp = function (event) {
+                if (_this.state.open && !_this.props.docked && (0, _keycode2.default)(event) === 'esc') {
+                  _this.close('escape');
+                }
+              }, _this.onBodyTouchStart = function (event) {
+                var swipeAreaWidth = _this.props.swipeAreaWidth;
+          
+                var touchStartX = event.touches[0].pageX;
+                var touchStartY = event.touches[0].pageY;
+          
+                // Open only if swiping from far left (or right) while closed
+                if (swipeAreaWidth !== null && !_this.state.open) {
+                  if (_this.props.openSecondary) {
+                    // If openSecondary is true calculate from the far right
+                    if (touchStartX < document.body.offsetWidth - swipeAreaWidth) return;
+                  } else {
+                    // If openSecondary is false calculate from the far left
+                    if (touchStartX > swipeAreaWidth) return;
+                  }
+                }
+          
+                if (!_this.state.open && (openNavEventHandler !== _this.onBodyTouchStart || _this.props.disableSwipeToOpen)) {
+                  return;
+                }
+          
+                _this.maybeSwiping = true;
+                _this.touchStartX = touchStartX;
+                _this.touchStartY = touchStartY;
+          
+                document.body.addEventListener('touchmove', _this.onBodyTouchMove);
+                document.body.addEventListener('touchend', _this.onBodyTouchEnd);
+                document.body.addEventListener('touchcancel', _this.onBodyTouchEnd);
+              }, _this.onBodyTouchMove = function (event) {
+                var currentX = event.touches[0].pageX;
+                var currentY = event.touches[0].pageY;
+          
+                if (_this.state.swiping) {
+                  event.preventDefault();
+                  _this.setPosition(_this.getTranslateX(currentX));
+                } else if (_this.maybeSwiping) {
+                  var dXAbs = Math.abs(currentX - _this.touchStartX);
+                  var dYAbs = Math.abs(currentY - _this.touchStartY);
+                  // If the user has moved his thumb ten pixels in either direction,
+                  // we can safely make an assumption about whether he was intending
+                  // to swipe or scroll.
+                  var threshold = 10;
+          
+                  if (dXAbs > threshold && dYAbs <= threshold) {
+                    _this.swipeStartX = currentX;
+                    _this.setState({
+                      swiping: _this.state.open ? 'closing' : 'opening'
+                    });
+                    _this.setPosition(_this.getTranslateX(currentX));
+                  } else if (dXAbs <= threshold && dYAbs > threshold) {
+                    _this.onBodyTouchEnd();
+                  }
+                }
+              }, _this.onBodyTouchEnd = function (event) {
+                if (_this.state.swiping) {
+                  var currentX = event.changedTouches[0].pageX;
+                  var translateRatio = _this.getTranslateX(currentX) / _this.getMaxTranslateX();
+          
+                  _this.maybeSwiping = false;
+                  var swiping = _this.state.swiping;
+                  _this.setState({
+                    swiping: null
+                  });
+          
+                  // We have to open or close after setting swiping to null,
+                  // because only then CSS transition is enabled.
+                  if (translateRatio > 0.5) {
+                    if (swiping === 'opening') {
+                      _this.setPosition(_this.getMaxTranslateX());
+                    } else {
+                      _this.close('swipe');
+                    }
+                  } else {
+                    if (swiping === 'opening') {
+                      _this.open('swipe');
+                    } else {
+                      _this.setPosition(0);
+                    }
+                  }
+                } else {
+                  _this.maybeSwiping = false;
+                }
+          
+                document.body.removeEventListener('touchmove', _this.onBodyTouchMove);
+                document.body.removeEventListener('touchend', _this.onBodyTouchEnd);
+                document.body.removeEventListener('touchcancel', _this.onBodyTouchEnd);
+              }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+            }>
+</div>,
+        "_debugID": 2,
+        "_renderedOutput": <div>
+          <function AppBar() {
+              var _ref;
+          
+              var _temp, _this, _ret;
+          
+              (0, _classCallCheck3.default)(this, AppBar);
+          
+              for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+              }
+          
+              return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = AppBar.__proto__ || (0, _getPrototypeOf2.default)(AppBar)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapLeftIconButton = function (event) {
+                if (_this.props.onLeftIconButtonTouchTap) {
+                  _this.props.onLeftIconButtonTouchTap(event);
+                }
+              }, _this.handleTouchTapRightIconButton = function (event) {
+                if (_this.props.onRightIconButtonTouchTap) {
+                  _this.props.onRightIconButtonTouchTap(event);
+                }
+              }, _this.handleTitleTouchTap = function (event) {
+                if (_this.props.onTitleTouchTap) {
+                  _this.props.onTitleTouchTap(event);
+                }
+              }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+            }
+                    iconClassNameRight="muidocs-icon-navigation-expand-more"
+                    onLeftIconButtonTouchTap={[Function]}
+                    showMenuIconButton={true}
+                    title="San Francisco Film Locations"
+                    zDepth={1} />
+          <function Drawer() {
+              var _ref;
+          
+              var _temp, _this, _ret;
+          
+              (0, _classCallCheck3.default)(this, Drawer);
+          
+              for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+              }
+          
+              return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Drawer.__proto__ || (0, _getPrototypeOf2.default)(Drawer)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapOverlay = function (event) {
+                event.preventDefault();
+                _this.close('clickaway');
+              }, _this.handleKeyUp = function (event) {
+                if (_this.state.open && !_this.props.docked && (0, _keycode2.default)(event) === 'esc') {
+                  _this.close('escape');
+                }
+              }, _this.onBodyTouchStart = function (event) {
+                var swipeAreaWidth = _this.props.swipeAreaWidth;
+          
+                var touchStartX = event.touches[0].pageX;
+                var touchStartY = event.touches[0].pageY;
+          
+                // Open only if swiping from far left (or right) while closed
+                if (swipeAreaWidth !== null && !_this.state.open) {
+                  if (_this.props.openSecondary) {
+                    // If openSecondary is true calculate from the far right
+                    if (touchStartX < document.body.offsetWidth - swipeAreaWidth) return;
+                  } else {
+                    // If openSecondary is false calculate from the far left
+                    if (touchStartX > swipeAreaWidth) return;
+                  }
+                }
+          
+                if (!_this.state.open && (openNavEventHandler !== _this.onBodyTouchStart || _this.props.disableSwipeToOpen)) {
+                  return;
+                }
+          
+                _this.maybeSwiping = true;
+                _this.touchStartX = touchStartX;
+                _this.touchStartY = touchStartY;
+          
+                document.body.addEventListener('touchmove', _this.onBodyTouchMove);
+                document.body.addEventListener('touchend', _this.onBodyTouchEnd);
+                document.body.addEventListener('touchcancel', _this.onBodyTouchEnd);
+              }, _this.onBodyTouchMove = function (event) {
+                var currentX = event.touches[0].pageX;
+                var currentY = event.touches[0].pageY;
+          
+                if (_this.state.swiping) {
+                  event.preventDefault();
+                  _this.setPosition(_this.getTranslateX(currentX));
+                } else if (_this.maybeSwiping) {
+                  var dXAbs = Math.abs(currentX - _this.touchStartX);
+                  var dYAbs = Math.abs(currentY - _this.touchStartY);
+                  // If the user has moved his thumb ten pixels in either direction,
+                  // we can safely make an assumption about whether he was intending
+                  // to swipe or scroll.
+                  var threshold = 10;
+          
+                  if (dXAbs > threshold && dYAbs <= threshold) {
+                    _this.swipeStartX = currentX;
+                    _this.setState({
+                      swiping: _this.state.open ? 'closing' : 'opening'
+                    });
+                    _this.setPosition(_this.getTranslateX(currentX));
+                  } else if (dXAbs <= threshold && dYAbs > threshold) {
+                    _this.onBodyTouchEnd();
+                  }
+                }
+              }, _this.onBodyTouchEnd = function (event) {
+                if (_this.state.swiping) {
+                  var currentX = event.changedTouches[0].pageX;
+                  var translateRatio = _this.getTranslateX(currentX) / _this.getMaxTranslateX();
+          
+                  _this.maybeSwiping = false;
+                  var swiping = _this.state.swiping;
+                  _this.setState({
+                    swiping: null
+                  });
+          
+                  // We have to open or close after setting swiping to null,
+                  // because only then CSS transition is enabled.
+                  if (translateRatio > 0.5) {
+                    if (swiping === 'opening') {
+                      _this.setPosition(_this.getMaxTranslateX());
+                    } else {
+                      _this.close('swipe');
+                    }
+                  } else {
+                    if (swiping === 'opening') {
+                      _this.open('swipe');
+                    } else {
+                      _this.setPosition(0);
+                    }
+                  }
+                } else {
+                  _this.maybeSwiping = false;
+                }
+          
+                document.body.removeEventListener('touchmove', _this.onBodyTouchMove);
+                document.body.removeEventListener('touchend', _this.onBodyTouchEnd);
+                document.body.removeEventListener('touchcancel', _this.onBodyTouchEnd);
+              }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+            }
+                    containerStyle={
+                              Object {
+                                        "top": "64px",
+                                      }
+                    }
+                    disableSwipeToOpen={false}
+                    docked={true}
+                    open={true}
+                    openSecondary={false}
+                    swipeAreaWidth={30}
+                    width={300}
+                    zDepth={2}>
+                    <function MenuItem() {
+                        var _ref;
+                    
+                        var _temp, _this, _ret;
+                    
+                        (0, _classCallCheck3.default)(this, MenuItem);
+                    
+                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                          args[_key] = arguments[_key];
+                        }
+                    
+                        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                          open: false
+                        }, _this.cloneMenuItem = function (item) {
+                          return _react2.default.cloneElement(item, {
+                            onTouchTap: function onTouchTap(event) {
+                              if (!item.props.menuItems) {
+                                _this.handleRequestClose();
+                              }
+                    
+                              if (item.props.onTouchTap) {
+                                item.props.onTouchTap(event);
+                              }
+                            }
+                          });
+                        }, _this.handleTouchTap = function (event) {
+                          event.preventDefault();
+                    
+                          _this.setState({
+                            open: true,
+                            anchorEl: _reactDom2.default.findDOMNode(_this)
+                          });
+                    
+                          if (_this.props.onTouchTap) {
+                            _this.props.onTouchTap(event);
+                          }
+                        }, _this.handleRequestClose = function () {
+                          _this.setState({
+                            open: false,
+                            anchorEl: null
+                          });
+                        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                      }
+                              checked={false}
+                              desktop={false}
+                              disabled={false}
+                              focusState="none"
+                              insetChildren={false}>
+                              <form
+                                        onSubmit={[Function]}>
+                                        <function AutosuggestContainer(_ref) {
+                                            var alwaysRenderSuggestions = _ref.alwaysRenderSuggestions;
+                                        
+                                            _classCallCheck(this, AutosuggestContainer);
+                                        
+                                            var _this = _possibleConstructorReturn(this, (AutosuggestContainer.__proto__ || Object.getPrototypeOf(AutosuggestContainer)).call(this));
+                                        
+                                            _this.storeInputReference = function (input) {
+                                              _this.input = input;
+                                            };
+                                        
+                                            var initialState = {
+                                              isFocused: false,
+                                              isCollapsed: !alwaysRenderSuggestions,
+                                              focusedSectionIndex: null,
+                                              focusedSuggestionIndex: null,
+                                              valueBeforeUpDown: null
+                                            };
+                                        
+                                            _this.store = (0, _redux.createStore)(_redux3.default, initialState);
+                                            return _this;
+                                          }
+                                                  alwaysRenderSuggestions={false}
+                                                  focusFirstSuggestion={false}
+                                                  focusInputOnSuggestionClick={true}
+                                                  getSectionSuggestions={[Function]}
+                                                  getSuggestionValue={[Function]}
+                                                  id="1"
+                                                  inputProps={
+                                                            Object {
+                                                                      "onChange": [Function],
+                                                                      "placeholder": "Search by Film Title",
+                                                                      "value": "",
+                                                                    }
+                                                  }
+                                                  multiSection={true}
+                                                  onSuggestionsClearRequested={[Function]}
+                                                  onSuggestionsFetchRequested={[Function]}
+                                                  renderSectionTitle={[Function]}
+                                                  renderSuggestion={[Function]}
+                                                  shouldRenderSuggestions={[Function]}
+                                                  suggestions={Array []}
+                                                  theme={
+                                                            Object {
+                                                                      "container": "react-autosuggest__container",
+                                                                      "containerOpen": "react-autosuggest__container--open",
+                                                                      "input": "react-autosuggest__input",
+                                                                      "sectionContainer": "react-autosuggest__section-container",
+                                                                      "sectionTitle": "react-autosuggest__section-title",
+                                                                      "suggestion": "react-autosuggest__suggestion",
+                                                                      "suggestionFocused": "react-autosuggest__suggestion--focused",
+                                                                      "suggestionsContainer": "react-autosuggest__suggestions-container",
+                                                                      "suggestionsList": "react-autosuggest__suggestions-list",
+                                                                    }
+                                                  } />
+                              </form>
+                    </function MenuItem() {
+                        var _ref;
+                    
+                        var _temp, _this, _ret;
+                    
+                        (0, _classCallCheck3.default)(this, MenuItem);
+                    
+                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                          args[_key] = arguments[_key];
+                        }
+                    
+                        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                          open: false
+                        }, _this.cloneMenuItem = function (item) {
+                          return _react2.default.cloneElement(item, {
+                            onTouchTap: function onTouchTap(event) {
+                              if (!item.props.menuItems) {
+                                _this.handleRequestClose();
+                              }
+                    
+                              if (item.props.onTouchTap) {
+                                item.props.onTouchTap(event);
+                              }
+                            }
+                          });
+                        }, _this.handleTouchTap = function (event) {
+                          event.preventDefault();
+                    
+                          _this.setState({
+                            open: true,
+                            anchorEl: _reactDom2.default.findDOMNode(_this)
+                          });
+                    
+                          if (_this.props.onTouchTap) {
+                            _this.props.onTouchTap(event);
+                          }
+                        }, _this.handleRequestClose = function () {
+                          _this.setState({
+                            open: false,
+                            anchorEl: null
+                          });
+                        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                      }>
+                    <function MenuItem() {
+                        var _ref;
+                    
+                        var _temp, _this, _ret;
+                    
+                        (0, _classCallCheck3.default)(this, MenuItem);
+                    
+                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                          args[_key] = arguments[_key];
+                        }
+                    
+                        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                          open: false
+                        }, _this.cloneMenuItem = function (item) {
+                          return _react2.default.cloneElement(item, {
+                            onTouchTap: function onTouchTap(event) {
+                              if (!item.props.menuItems) {
+                                _this.handleRequestClose();
+                              }
+                    
+                              if (item.props.onTouchTap) {
+                                item.props.onTouchTap(event);
+                              }
+                            }
+                          });
+                        }, _this.handleTouchTap = function (event) {
+                          event.preventDefault();
+                    
+                          _this.setState({
+                            open: true,
+                            anchorEl: _reactDom2.default.findDOMNode(_this)
+                          });
+                    
+                          if (_this.props.onTouchTap) {
+                            _this.props.onTouchTap(event);
+                          }
+                        }, _this.handleRequestClose = function () {
+                          _this.setState({
+                            open: false,
+                            anchorEl: null
+                          });
+                        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                      }
+                              checked={false}
+                              desktop={false}
+                              disabled={false}
+                              focusState="none"
+                              insetChildren={false}>
+                              <function ListItem() {
+                                  var _ref;
+                              
+                                  var _temp, _this, _ret;
+                              
+                                  (0, _classCallCheck3.default)(this, ListItem);
+                              
+                                  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                                    args[_key] = arguments[_key];
+                                  }
+                              
+                                  return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = ListItem.__proto__ || (0, _getPrototypeOf2.default)(ListItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                                    hovered: false,
+                                    isKeyboardFocused: false,
+                                    open: false,
+                                    rightIconButtonHovered: false,
+                                    rightIconButtonKeyboardFocused: false,
+                                    touch: false
+                                  }, _this.handleKeyboardFocus = function (event, isKeyboardFocused) {
+                                    _this.setState({ isKeyboardFocused: isKeyboardFocused });
+                                    _this.props.onKeyboardFocus(event, isKeyboardFocused);
+                                  }, _this.handleMouseEnter = function (event) {
+                                    if (!_this.state.touch) _this.setState({ hovered: true });
+                                    _this.props.onMouseEnter(event);
+                                  }, _this.handleMouseLeave = function (event) {
+                                    _this.setState({ hovered: false });
+                                    _this.props.onMouseLeave(event);
+                                  }, _this.handleNestedListToggle = function (event) {
+                                    event.stopPropagation();
+                                    _this.setState({ open: !_this.state.open }, function () {
+                                      _this.props.onNestedListToggle(_this);
+                                    });
+                                  }, _this.handleRightIconButtonKeyboardFocus = function (event, isKeyboardFocused) {
+                                    if (isKeyboardFocused) {
+                                      _this.setState({
+                                        isKeyboardFocused: false,
+                                        rightIconButtonKeyboardFocused: isKeyboardFocused
+                                      });
+                                    }
+                              
+                                    var iconButton = _this.props.rightIconButton;
+                              
+                                    if (iconButton && iconButton.props.onKeyboardFocus) iconButton.props.onKeyboardFocus(event, isKeyboardFocused);
+                                  }, _this.handleRightIconButtonMouseLeave = function (event) {
+                                    var iconButton = _this.props.rightIconButton;
+                                    _this.setState({ rightIconButtonHovered: false });
+                                    if (iconButton && iconButton.props.onMouseLeave) iconButton.props.onMouseLeave(event);
+                                  }, _this.handleRightIconButtonMouseEnter = function (event) {
+                                    var iconButton = _this.props.rightIconButton;
+                                    _this.setState({ rightIconButtonHovered: true });
+                                    if (iconButton && iconButton.props.onMouseEnter) iconButton.props.onMouseEnter(event);
+                                  }, _this.handleRightIconButtonMouseUp = function (event) {
+                                    var iconButton = _this.props.rightIconButton;
+                                    event.stopPropagation();
+                                    if (iconButton && iconButton.props.onMouseUp) iconButton.props.onMouseUp(event);
+                                  }, _this.handleRightIconButtonTouchTap = function (event) {
+                                    var iconButton = _this.props.rightIconButton;
+                              
+                                    // Stop the event from bubbling up to the list-item
+                                    event.stopPropagation();
+                                    if (iconButton && iconButton.props.onTouchTap) iconButton.props.onTouchTap(event);
+                                  }, _this.handleTouchStart = function (event) {
+                                    _this.setState({ touch: true });
+                                    _this.props.onTouchStart(event);
+                                  }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                                }
+                                        autoGenerateNestedIndicator={true}
+                                        disableKeyboardFocus={false}
+                                        disabled={false}
+                                        initiallyOpen={false}
+                                        insetChildren={false}
+                                        nestedItems={Array []}
+                                        nestedLevel={0}
+                                        onKeyboardFocus={[Function]}
+                                        onMouseEnter={[Function]}
+                                        onMouseLeave={[Function]}
+                                        onNestedListToggle={[Function]}
+                                        onTouchStart={[Function]}
+                                        open={null}
+                                        primaryText="Click a marker to get movie details!"
+                                        primaryTogglesNestedList={false}
+                                        secondaryText="Or search for locations in SF!"
+                                        secondaryTextLines={1} />
+                    </function MenuItem() {
+                        var _ref;
+                    
+                        var _temp, _this, _ret;
+                    
+                        (0, _classCallCheck3.default)(this, MenuItem);
+                    
+                        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                          args[_key] = arguments[_key];
+                        }
+                    
+                        return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = MenuItem.__proto__ || (0, _getPrototypeOf2.default)(MenuItem)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
+                          open: false
+                        }, _this.cloneMenuItem = function (item) {
+                          return _react2.default.cloneElement(item, {
+                            onTouchTap: function onTouchTap(event) {
+                              if (!item.props.menuItems) {
+                                _this.handleRequestClose();
+                              }
+                    
+                              if (item.props.onTouchTap) {
+                                item.props.onTouchTap(event);
+                              }
+                            }
+                          });
+                        }, _this.handleTouchTap = function (event) {
+                          event.preventDefault();
+                    
+                          _this.setState({
+                            open: true,
+                            anchorEl: _reactDom2.default.findDOMNode(_this)
+                          });
+                    
+                          if (_this.props.onTouchTap) {
+                            _this.props.onTouchTap(event);
+                          }
+                        }, _this.handleRequestClose = function () {
+                          _this.setState({
+                            open: false,
+                            anchorEl: null
+                          });
+                        }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+                      }>
+          </function Drawer() {
+              var _ref;
+          
+              var _temp, _this, _ret;
+          
+              (0, _classCallCheck3.default)(this, Drawer);
+          
+              for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+                args[_key] = arguments[_key];
+              }
+          
+              return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = Drawer.__proto__ || (0, _getPrototypeOf2.default)(Drawer)).call.apply(_ref, [this].concat(args))), _this), _this.handleTouchTapOverlay = function (event) {
+                event.preventDefault();
+                _this.close('clickaway');
+              }, _this.handleKeyUp = function (event) {
+                if (_this.state.open && !_this.props.docked && (0, _keycode2.default)(event) === 'esc') {
+                  _this.close('escape');
+                }
+              }, _this.onBodyTouchStart = function (event) {
+                var swipeAreaWidth = _this.props.swipeAreaWidth;
+          
+                var touchStartX = event.touches[0].pageX;
+                var touchStartY = event.touches[0].pageY;
+          
+                // Open only if swiping from far left (or right) while closed
+                if (swipeAreaWidth !== null && !_this.state.open) {
+                  if (_this.props.openSecondary) {
+                    // If openSecondary is true calculate from the far right
+                    if (touchStartX < document.body.offsetWidth - swipeAreaWidth) return;
+                  } else {
+                    // If openSecondary is false calculate from the far left
+                    if (touchStartX > swipeAreaWidth) return;
+                  }
+                }
+          
+                if (!_this.state.open && (openNavEventHandler !== _this.onBodyTouchStart || _this.props.disableSwipeToOpen)) {
+                  return;
+                }
+          
+                _this.maybeSwiping = true;
+                _this.touchStartX = touchStartX;
+                _this.touchStartY = touchStartY;
+          
+                document.body.addEventListener('touchmove', _this.onBodyTouchMove);
+                document.body.addEventListener('touchend', _this.onBodyTouchEnd);
+                document.body.addEventListener('touchcancel', _this.onBodyTouchEnd);
+              }, _this.onBodyTouchMove = function (event) {
+                var currentX = event.touches[0].pageX;
+                var currentY = event.touches[0].pageY;
+          
+                if (_this.state.swiping) {
+                  event.preventDefault();
+                  _this.setPosition(_this.getTranslateX(currentX));
+                } else if (_this.maybeSwiping) {
+                  var dXAbs = Math.abs(currentX - _this.touchStartX);
+                  var dYAbs = Math.abs(currentY - _this.touchStartY);
+                  // If the user has moved his thumb ten pixels in either direction,
+                  // we can safely make an assumption about whether he was intending
+                  // to swipe or scroll.
+                  var threshold = 10;
+          
+                  if (dXAbs > threshold && dYAbs <= threshold) {
+                    _this.swipeStartX = currentX;
+                    _this.setState({
+                      swiping: _this.state.open ? 'closing' : 'opening'
+                    });
+                    _this.setPosition(_this.getTranslateX(currentX));
+                  } else if (dXAbs <= threshold && dYAbs > threshold) {
+                    _this.onBodyTouchEnd();
+                  }
+                }
+              }, _this.onBodyTouchEnd = function (event) {
+                if (_this.state.swiping) {
+                  var currentX = event.changedTouches[0].pageX;
+                  var translateRatio = _this.getTranslateX(currentX) / _this.getMaxTranslateX();
+          
+                  _this.maybeSwiping = false;
+                  var swiping = _this.state.swiping;
+                  _this.setState({
+                    swiping: null
+                  });
+          
+                  // We have to open or close after setting swiping to null,
+                  // because only then CSS transition is enabled.
+                  if (translateRatio > 0.5) {
+                    if (swiping === 'opening') {
+                      _this.setPosition(_this.getMaxTranslateX());
+                    } else {
+                      _this.close('swipe');
+                    }
+                  } else {
+                    if (swiping === 'opening') {
+                      _this.open('swipe');
+                    } else {
+                      _this.setPosition(0);
+                    }
+                  }
+                } else {
+                  _this.maybeSwiping = false;
+                }
+          
+                document.body.removeEventListener('touchmove', _this.onBodyTouchMove);
+                document.body.removeEventListener('touchend', _this.onBodyTouchEnd);
+                document.body.removeEventListener('touchcancel', _this.onBodyTouchEnd);
+              }, _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+            }>
+</div>,
+      },
+      "_renderedNodeType": 0,
+      "_rootNodeID": 0,
+      "_topLevelWrapper": null,
+      "_updateBatchNumber": null,
+      "_warnedAboutRefsInRender": false,
+    },
+    "getRenderOutput": [Function],
+    "render": [Function],
+  },
+  "root": [Circular],
+  "unrendered": <function NavBar(props) {/* istanbul ignore next */_classCallCheck(this, NavBar);var _this = _possibleConstructorReturn(this, (NavBar.__proto__ || Object.getPrototypeOf(NavBar)).call(this, props));
+
+    /* istanbul ignore next */_this.state = {
+      open: true,
+      autocompleteVal: '',
+      autocompleteSuggestions: [],
+      isFetchingData: false };
+
+
+    /* istanbul ignore next */_this.handleOpenSideBar = /* istanbul ignore next */_this.handleOpenSideBar.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.renderMovieDetails = /* istanbul ignore next */_this.renderMovieDetails.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.handleSubmit = /* istanbul ignore next */_this.handleSubmit.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.onChange = /* istanbul ignore next */_this.onChange.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.onSuggestionsFetchRequested = /* istanbul ignore next */_this.onSuggestionsFetchRequested.bind( /* istanbul ignore next */_this);
+    /* istanbul ignore next */_this.onSuggestionsClearRequested = /* istanbul ignore next */_this.onSuggestionsClearRequested.bind( /* istanbul ignore next */_this); /* istanbul ignore next */return _this;
+  }
+    getMovieQueryData={[Function]}
+    movies={
+        Object {
+            "activeMovie": Object {},
+            "movieData": Array [],
+            "status": null,
+          }
+    } />,
+}
+`;

@@ -4,7 +4,7 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const routesMain = require('./routes_main')
 const app = express()
-
+console.log('this', process.env.NODE_ENV)
 // App level middleware
 app.use(bodyParser())
 app.use(morgan('dev'))

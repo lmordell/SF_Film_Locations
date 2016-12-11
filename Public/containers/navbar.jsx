@@ -15,7 +15,7 @@ import { getSuggestions, getSuggestionValue, renderSuggestion, renderSectionTitl
 // components
 import Movie from '../components/movie_detail'
 
-class NavBar extends Component {
+export class NavBar extends Component {
   constructor (props) {
     super(props)
 
@@ -47,7 +47,9 @@ class NavBar extends Component {
 
   renderMovieDetails () {
     const { activeMovie, status } = this.props.movies
+
     const { isFetchingData } = this.state
+
     if(isFetchingData) {
       return ( <img src='../assets/loading.gif' className='spinner' /> )
     }
@@ -62,7 +64,7 @@ class NavBar extends Component {
     //If the user has not clicked on marker, display default information
     if(!activeMovie.title && !isFetchingData) {
       return (
-        <ListItem primaryText=' Click a marker to get movie details!' secondaryText='Or search for locations in SF!'>
+        <ListItem primaryText='Click a marker to get movie details!' secondaryText='Or search for films in the search bar!'>
         </ListItem>
       )
     }
@@ -99,7 +101,7 @@ class NavBar extends Component {
 
     return (
       <div>
-        <AppBar onLeftIconButtonTouchTap={this.handleOpenSideBar} title='SF Film Locations' iconClassNameRight='muidocs-icon-navigation-expand-more' />
+        <AppBar onLeftIconButtonTouchTap={this.handleOpenSideBar} title='San Francisco Film Locations' iconClassNameRight='muidocs-icon-navigation-expand-more' />
         <Drawer containerStyle={forceNavDown} width={300} open={this.state.open}>
           <MenuItem>
           <form onSubmit={this.handleSubmit}>

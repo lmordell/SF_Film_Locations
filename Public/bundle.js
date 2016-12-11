@@ -53,6 +53,11 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.createStoreWithMiddleware = undefined;
+
 	var _react = __webpack_require__(2);
 
 	var _react2 = _interopRequireDefault(_react);
@@ -83,7 +88,7 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxPromise2.default)(_redux.createStore);
+	var createStoreWithMiddleware = exports.createStoreWithMiddleware = (0, _redux.applyMiddleware)(_reduxPromise2.default)(_redux.createStore);
 
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRedux.Provider,
@@ -65061,6 +65066,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.NavBar = undefined;
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -65110,7 +65116,7 @@
 	// components
 
 
-	var NavBar = function (_Component) {
+	var NavBar = exports.NavBar = function (_Component) {
 	  _inherits(NavBar, _Component);
 
 	  function NavBar(props) {
@@ -65153,10 +65159,11 @@
 	  }, {
 	    key: 'renderMovieDetails',
 	    value: function renderMovieDetails() {
-	      var _props$movies = this.props.movies;
-	      var activeMovie = _props$movies.activeMovie;
-	      var status = _props$movies.status;
+	      var _props$movies = this.props.movies,
+	          activeMovie = _props$movies.activeMovie,
+	          status = _props$movies.status;
 	      var isFetchingData = this.state.isFetchingData;
+
 
 	      if (isFetchingData) {
 	        return _react2.default.createElement('img', { src: '../assets/loading.gif', className: 'spinner' });
@@ -65171,7 +65178,7 @@
 	      }
 	      //If the user has not clicked on marker, display default information
 	      if (!activeMovie.title && !isFetchingData) {
-	        return _react2.default.createElement(_materialUi.ListItem, { primaryText: ' Click a marker to get movie details!', secondaryText: 'Or search for locations in SF!' });
+	        return _react2.default.createElement(_materialUi.ListItem, { primaryText: 'Click a marker to get movie details!', secondaryText: 'Or search for films in the search bar!' });
 	      }
 	    }
 	  }, {
@@ -65205,9 +65212,9 @@
 	      // Pushes the material ui drawer to just below the navbar
 	      var forceNavDown = { 'top': '64px' };
 	      // Autocomplete props
-	      var _state = this.state;
-	      var autocompleteVal = _state.autocompleteVal;
-	      var autocompleteSuggestions = _state.autocompleteSuggestions;
+	      var _state = this.state,
+	          autocompleteVal = _state.autocompleteVal,
+	          autocompleteSuggestions = _state.autocompleteSuggestions;
 
 	      var inputProps = {
 	        placeholder: 'Search by Film Title',
@@ -65218,7 +65225,7 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(_materialUi.AppBar, { onLeftIconButtonTouchTap: this.handleOpenSideBar, title: 'SF Film Locations', iconClassNameRight: 'muidocs-icon-navigation-expand-more' }),
+	        _react2.default.createElement(_materialUi.AppBar, { onLeftIconButtonTouchTap: this.handleOpenSideBar, title: 'San Francisco Film Locations', iconClassNameRight: 'muidocs-icon-navigation-expand-more' }),
 	        _react2.default.createElement(
 	          _materialUi.Drawer,
 	          { containerStyle: forceNavDown, width: 300, open: this.state.open },
@@ -84585,9 +84592,9 @@
 	      var _this2 = this;
 
 	      // console.log(this.props)
-	      var _props = this.props;
-	      var movies = _props.movies;
-	      var updateActiveMovie = _props.updateActiveMovie;
+	      var _props = this.props,
+	          movies = _props.movies,
+	          updateActiveMovie = _props.updateActiveMovie;
 
 	      return movies.movieData.map(function (movie, i) {
 	        //set show info for each marker to false
@@ -84638,9 +84645,9 @@
 	    value: function render() {
 	      var _this3 = this;
 
-	      var _state$defaultPositio = this.state.defaultPosition;
-	      var lat = _state$defaultPositio.lat;
-	      var lng = _state$defaultPositio.lng;
+	      var _state$defaultPositio = this.state.defaultPosition,
+	          lat = _state$defaultPositio.lat,
+	          lng = _state$defaultPositio.lng;
 
 	      return _react2.default.createElement(
 	        'div',

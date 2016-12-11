@@ -8,7 +8,7 @@ import reducers from './reducers'
 
 import App from './components/app'
 
-const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore)
+export const createStoreWithMiddleware = applyMiddleware(ReduxPromise)(createStore)
 
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
